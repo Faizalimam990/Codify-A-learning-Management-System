@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Manage Courses</title>
+
+    <!-- Bootstrap 4.6 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+    <!-- GSAP Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f4f7f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #1e212d;
+            padding: 15px 20px;
+        }
+
+        .navbar-brand {
+            color: #ff9f43 !important;
+            font-weight: bold;
+            font-size: 1.6rem;
+        }
+
+        .nav-link {
+            color: #e4e4e4 !important;
+            font-size: 1.1rem;
+            margin-right: 15px;
+        }
+
+        .nav-link:hover {
+            color: #ff9f43 !important;
+            text-decoration: underline;
+        }
+
+        .btn-custom {
+            background-color: #ff9f43;
+            color: #1e212d;
+            font-weight: bold;
+            border-radius: 30px;
+        }
+
+        /* Page Header */
+        .header {
+            text-align: center;
+            margin: 50px 0;
+            color: #343a40;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        /* Course Cards */
+        .course-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 30px;
+            max-width: 1000px;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: scale(1);
+            opacity: 1;
+            box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .course-card h2 {
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .course-card h4 {
+            color: #6c757d;
+            font-weight: normal;
+        }
+
+        .course-card img {
+            border-radius: 8px;
+            margin-top: 20px;
+            max-width: 120px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-list li {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 0.95rem;
+        }
+
+        .lesson-list a {
+            color: #28a745;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .lesson-list a:hover {
+            color: #218838;
+            text-decoration: underline;
+        }
+
+        /* Button Styling */
+        .btn-danger {
+            background-color: #e53e3e;
+            color: #fff;
+            border-radius: 30px;
+            font-weight: bold;
+            padding: 8px 16px;
+            margin-top: 10px;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #c53030;
+        }
+
+        .btn-custom {
+            background-color: #ff9f43;
+            color: #1e212d;
+            font-weight: bold;
+            border-radius: 30px;
+            padding: 8px 16px;
+            margin-top: 10px;
+            border: none;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .course-card {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .navbar-brand {
+                font-size: 1.4rem;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">CODIFY ADMIN</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span><i class="fas fa-bars" style="color: white;"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Show Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/add-course">Add Course</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/show-courses/">Show All Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Show Analytics</a></li>
+            </ul>
+            <a href="/logout" class="btn btn-custom ml-3">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="header" id="page-header">Course Management Dashboard</div>
+
+        <!-- Course Cards -->
+        {% for course in courses %}
+        <div class="course-card" id="course-{{ loop.index }}">
+            <h2>{{ course.title }}</h2>
+            <p><strong>Course ID:</strong> {{ course.id }}</p>
+            <img src="data:image/jpeg;base64,{{ course.thumbnail }}" class="img-fluid" alt="Course Thumbnail">
+            <h4>Lessons:</h4>
+
+            <ul class="lesson-list list-unstyled">
+                {% for lesson in course.lessons %}
+                <li>
+                    <strong>{{ lesson.title }}</strong> - {{ lesson.content }} - 
+                    <a href="{{ lesson.course_link }}" target="_blank">Visit Lesson</a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Delete and Update Course Forms -->
+            <form action="{{ url_for('deletecourse', id=course.id) }}" method="POST">
+                <button type="submit" class="btn btn-danger">Delete Course</button>
+            </form>
+            <form action="{{ url_for('update_course', course_id=course.id) }}" method="POST">
+
+                <button type="submit" class="btn btn-custom">Update Course</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- GSAP Animation Script -->
+    <script>
+        // Animate header with GSAP
+        gsap.from("#page-header", { 
+            duration: 1.5, 
+            y: -50, 
+            opacity: 0, 
+            ease: "bounce.out" 
+        });
+
+        // Animate course cards
+        document.querySelectorAll('.course-card').forEach((card, index) => {
+            gsap.to(card, { 
+                duration: 1.2, 
+                delay: 0.3 * index, 
+                scale: 1, 
+                opacity: 1, 
+                ease: "power3.out"
+            });
+        });
+    </script>
+
+    <!-- Bootstrap 4.6 JS (Optional) -->
+</body>
+</html>

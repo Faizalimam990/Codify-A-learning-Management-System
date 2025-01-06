@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Course with Lessons</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background for contrast */
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        .btn-add-lesson {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .btn-add-lesson:hover {
+            background-color: #218838;
+        }
+
+        h1, h2 {
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">LMS Admin Panel</a>
+            <a href="{{ url_for('index_page') }}" class="btn btn-outline-light">Back to Courses</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card p-4">
+                    <h1 class="text-center mb-4">Update Course</h1>
+                    <form method="POST" enctype="multipart/form-data">
+                        <!-- Course Details -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Course Title</label>
+                            <input type="text" name="title" id="title" class="form-control" placeholder="Enter course title" value="{{ course.title }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea name="description" id="description" class="form-control" rows="3" placeholder="Enter course description" required>{{ course.description }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Thumbnail" class="form-label">Course Thumbnail</label>
+                            <input type="file" class="form-control" name="Thumbnail">
+                        </div>
+
+                        <!-- Add Lesson Section -->
+                        <h2 class="mb-3">Update Lessons</h2>
+                        <div class="lessons-container">
+                            {% for lesson in course.lessons %}
+                                <div class="mb-3 lesson-item" data-index="{{ loop.index0 }}">
+                                    <input type="hidden" name="lessons[{{ loop.index0 }}][id]" value="{{ lesson.id }}">
+
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <input type="text" name="lessons[{{ loop.index0 }}][title]" class="form-control" placeholder="Lesson Title" value="{{ lesson.title }}" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" name="lessons[{{ loop.index0 }}][content]" class="form-control" placeholder="Lesson Content" value="{{ lesson.content }}" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="url" name="lessons[{{ loop.index0 }}][course_link]" class="form-control" placeholder="Lesson Link" value="{{ lesson.course_link }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="text-end mt-2">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeLesson({{ loop.index0 }})">Remove</button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Add More Lessons Button -->
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-success" id="add-lesson-btn" onclick="addLesson()">Add New Lesson</button>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary px-5">Save Course</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function addLesson() {
+            const index = document.querySelectorAll('.lesson-item').length;
+            const lessonHtml = `
+                <div class="mb-3 lesson-item" data-index="${index}">
+                    <input type="hidden" name="lessons[${index}][id]" value="">
+
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" name="lessons[${index}][title]" class="form-control" placeholder="Lesson Title" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="lessons[${index}][content]" class="form-control" placeholder="Lesson Content" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="url" name="lessons[${index}][course_link]" class="form-control" placeholder="Lesson Link" required>
+                        </div>
+                    </div>
+                    <div class="text-end mt-2">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeLesson(${index})">Remove</button>
+                    </div>
+                </div>
+            `;
+            document.querySelector('.lessons-container').insertAdjacentHTML('beforeend', lessonHtml);
+        }
+
+        function removeLesson(index) {
+            const lessonItem = document.querySelector(`.lesson-item[data-index="${index}"]`);
+            lessonItem.remove();
+        }
+    </script>
+</body>
+</html>

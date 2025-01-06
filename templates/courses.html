@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Courses - Codify</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/64085cd283.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            overflow-x: hidden;
+        }
+        .banner1 {
+            background: linear-gradient(135deg, #035fba, #4ca1af);
+            padding: 20px 0;
+            color: white;
+            text-align: center;
+        }
+        .navbar {
+            background-color: transparent !important;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        .btn-custom {
+            background-color: #fbb034;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #e89a03;
+            transform: translateY(-3px);
+        }
+        .card {
+            margin: 20px auto;
+            border: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+        .card-text {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        .custom-heading {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid banner1">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand text-light" href="#">CODIFY</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link text-light" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="/courses">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="/about">About</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="/contact">Contact</a></li>
+                </ul>
+                {% if username %}
+                    <span class="btn btn-custom">Welcome, {{ username }}!</span>
+                {% else %}
+                    <a href="/login" class="btn btn-custom">Account</a>
+                {% endif %}
+            </div>
+        </nav>
+        <h1 class="display-4">Learn & Upskill with Codify</h1>
+        <p class="lead">Explore our curated list of popular courses to boost your career.</p>
+    </div>
+
+    <div class="container py-5">
+        <h2 class="custom-heading">Popular Courses</h2>
+        <div class="row">
+            {% for course in courses %}
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="data:image/jpeg;base64,{{ course.thumbnail }}" class="card-img-top" alt="Course Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        <p class="card-text">{{ course.description.split()[:25] | join(' ') }}{% if course.description.split()|length > 50 %}...{% endif %}</p>
+                        <a href=" {{ url_for('course_description', id=course.id) }}" class="btn btn-custom w-100">Explore Course</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

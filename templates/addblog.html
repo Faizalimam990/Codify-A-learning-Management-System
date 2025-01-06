@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CODIFY ADMIN</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    /* General Styling */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #121212; /* Dark background for modern look */
+        color: #E4E4E4; /* Light text for contrast */
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        background-color: #1F1F2E;
+    }
+
+    .navbar-brand {
+        color: #FF9F43 !important;
+        font-weight: bold;
+        font-size: 1.75rem;
+        letter-spacing: 2px;
+    }
+
+    .nav-link {
+        color: #E4E4E4 !important;
+        margin-right: 20px;
+        transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+        color: #FF9F43 !important;
+    }
+
+    .btn-custom {
+        background-color: #FF9F43;
+        color: #1E1E2D;
+        font-weight: bold;
+        border-radius: 25px;
+        padding: 10px 25px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #e88e2e;
+        color: #ffffff;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 50px auto;
+    }
+
+    /* Card Styling */
+    .card {
+        background-color: #2C2F3F;
+        border-radius: 15px;
+        box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+    }
+
+    h1 {
+        color: #FF9F43;
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        color: #E4E4E4;
+        font-weight: bold;
+    }
+
+    .form-control {
+        background-color: #3A3F51;
+        border: 1px solid #444950;
+        color: #E4E4E4;
+        border-radius: 8px;
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    .form-control:focus {
+        border-color: #FF9F43;
+        box-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
+    }
+
+    .custom-select {
+        background-color: #3A3F51;
+        border: 1px solid #444950;
+        color: #E4E4E4;
+        border-radius: 8px;
+        font-size: 1rem;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .custom-select:focus {
+        border-color: #FF9F43;
+        box-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
+    }
+
+    .custom-select option {
+        background-color: #1F1F2E;
+        color: #E4E4E4;
+    }
+
+    .btn-primary-custom {
+        background-color: #5cb85c;
+        border-color: #5cb85c;
+        color: white;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #4cae4c;
+        border-color: #4cae4c;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .btn-warning {
+        background-color: #FF9F43;
+        border-color: #FF9F43;
+        color: white;
+        border-radius: 25px;
+        padding: 12px 40px;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-warning:hover {
+        background-color: #e88e2e;
+        transform: translateY(-3px);
+    }
+
+</style>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">CODIFY ADMIN</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span><i class="fas fa-bars" style="color: white;"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Show Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/add-course">Add Course</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/show-courses/">Show All Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/addblog/">Add Blogs</a></li>
+            </ul>
+            <a href="/logout" class="btn btn-custom ml-3">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Form -->
+     {% if success %}
+     <div class="container">
+        <h4 class="display-4">{{ success }}</h4>
+
+     </div>
+     {% else %}
+     <div class="container">
+        <h4 class="display-4">{{ error }}</h4>
+
+     </div>
+     {% endif %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card">
+                    <form method="post" enctype="multipart/form-data">
+                        <h1 class="text-center mb-4">Add Blog</h1>
+                        <div class="mb-4">
+                            <label for="Title" class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" placeholder="Enter Blog Title" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="Description" class="form-label">Description</label>
+                            <textarea class="form-control" name="Description" placeholder="Enter Blog Description" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="Thumbnail" class="form-label">Add Blog Thumbnail</label>
+                            <input type="file" class="form-control" name="Thumbnail" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="category" class="form-label">Select Category</label>
+                            <select name="category" class="custom-select" id="category">
+                                <option class="p-2" selected disabled>Select Category</option>
+                                <option value="TECH">Technology</option>
+                                <option value="PYTHON">Python</option>
+                                <option value="CYBER_SECURITY">Cyber Security</option>
+                                <option value="GENERATIVE_AI">Generative AI</option>
+                            </select>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-warning">Save Blog</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
