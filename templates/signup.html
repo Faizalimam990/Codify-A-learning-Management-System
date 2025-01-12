@@ -22,7 +22,7 @@
 
         /* Banner */
         .banner1 {
-            background-color: #0E3C6E;
+            background-color: #5E0DD9;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -115,7 +115,7 @@
         }
 
         .side-image {
-            background-image: url('../static/images/signup.png'); /* Replace with your actual image path */
+            background-image: url('../static/images/signup.webp'); /* Replace with your actual image path */
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -155,21 +155,29 @@
             </div>
         </nav>
     </div>
-
-    <!-- Main Content Section -->
     <div class="container-fluid">
         <div class="row content-wrapper">
             <!-- Form Section -->
             <div class="col-md-6 glass-card">
+                {% if error %}
+            <div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">
+                <strong>Error: </strong>{{ error }}
+            </div>
+            {% endif %}
+            {% if success %}
+            <div style="color: rgb(45, 191, 84); padding: 10px; border: 1px solid rgb(37, 255, 73); margin-bottom: 10px;">
+                <strong>Success: </strong>{{ success }}
+            </div>
+            {% endif %}
                 <p class="form-title">Create a New Account</p>
-                <form action="" id="signupform" method="POST">
+                <form action="/signin/" id="signupform" method="POST">
                     <div class="form-group">
                         <label for="username" class="sr-only">Username</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
                             </div>
-                            <input type="text" id="username" class="form-control" placeholder="Enter Username" required>
+                            <input type="text" id="username" name="Username" class="form-control" placeholder="Enter Username" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -178,7 +186,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
                             </div>
-                            <input type="email" id="email" class="form-control" placeholder="Enter Email" required>
+                            <input type="email" id="email" name="Email" class="form-control" placeholder="Enter Email" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -187,7 +195,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                             </div>
-                            <input type="password" id="password" class="form-control" placeholder="Enter Password" required>
+                            <input type="password" id="password" name="Password" class="form-control" placeholder="Enter Password" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -196,21 +204,21 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                             </div>
-                            <input type="password" id="confirm-password" class="form-control" placeholder="Confirm Password" required>
+                            <input type="password" name="ConfirmPassword" id="confirm-password" class="form-control" placeholder="Confirm Password" required>
                         </div>
                     </div>
-                    <p id="error-message" class="error-message">Passwords do not match!</p>
+                    <p id="error-message" class="error-message" style="display: none;">Passwords do not match!</p>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">Create Account</button>
                     </div>
                 </form>
             </div>
-
+    
             <!-- Image Section -->
             <div class="col-md-6 side-image"></div>
         </div>
     </div>
-
+    
     <script>
         document.getElementById('signupform').addEventListener('submit', function(event) {
             // Get the values of the password fields

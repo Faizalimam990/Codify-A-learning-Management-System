@@ -44,7 +44,7 @@ class Blogpost(Base):
     title=Column(String(200),nullable=False)
     category=Column(String(200),nullable=True)
     description=Column(String(500),nullable=False)
-    thumbnail=Column(LargeBinary,nullable=False)
+    thumbnail=Column(String(500),nullable=False)
 
 class Enrollment(Base):
     __tablename__ = 'enrollments'

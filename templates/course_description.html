@@ -232,7 +232,10 @@
                 <div class="card mx-auto" style="width: 21rem;">
                     <img class="card-img-top" src="data:image/jpeg;base64,{{ course.thumbnail }}" alt="Card image cap">
                     
-                      <a href="{{ url_for('course_lessons', id=course.id) }}" class="btn btn-warning text-light" style="font-family: 'Poppins',sans-serif; font-weight: 600;">Click to  Enroll </a>
+                    <form action="{{ url_for('enroll_in_course', course_id=course.id) }}" method="POST">
+                      <button type="submit" class="btn btn-primary">Enroll</button>
+                  </form>
+
                     </div>
                   </div>
             </div>

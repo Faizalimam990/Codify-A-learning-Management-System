@@ -1,13 +1,14 @@
 from flask import Flask, request, render_template, redirect, url_for, session,flash
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User, Course,Lesson,Blogpost
+from models import User, Course,Lesson,Blogpost,Enrollment
 from database import session as db_session
 from sqlalchemy.exc import IntegrityError,PendingRollbackError
 import base64
 import json
 import datetime
-
+import os
+from werkzeug.utils import secure_filename
 app = Flask(__name__)
 api = Api(app)
 app.secret_key = 'LMSFYNDCAPSTONE_PROJECT_F4I3AL_!M4M'
@@ -17,22 +18,12 @@ import base64
 @app.route('/')
 def index_page():
     username = session.get('username')
-    blogs = db_session.query(Blogpost).all()
+    blogs=db_session.query(Blogpost).all()
+    course=db_session.query(Course).all()
 
-    try:
-        # Convert the binary thumbnail to base64 for each blog in the blogs list
-        for blog in blogs:
-            if blog.thumbnail:  # Only encode if thumbnail exists
-                blog.thumbnail = base64.b64encode(blog.thumbnail).decode('utf-8')
-            else:
-                blog.thumbnail = None  # Handle missing thumbnails
+    return render_template('index.html', username=username,blogs=blogs,course=course)
 
-        return render_template('index.html', username=username, blogs=blogs)
-
-    except PendingRollbackError:
-        db_session.rollback()  # Rollback the session if an error has occurred
-        return "Transaction failed and was rolled back due to previous issues. Please try again."
-
+    
 
 
 
@@ -67,44 +58,81 @@ def user_login():
             return render_template('login.html', error="Incorrect password. Please try again.")
     else:
         return render_template('login.html', error="We can't find your credentials. Kindly sign up with a new account.")
+# Route to display the signup page
 
+# @app.route('/signup/', methods=['GET'])
+# def signin_page():
+#     return render_template('signup.html')
 
-# Sign-In Page
-@app.get('/signup')
-def signin_page():
+# # Route to handle the signup form submission
+# @app.route('/signin/', methods=['POST'])
+# def user_signin():
+#     name = request.form.get('Username')
+#     email = request.form.get('Email')
+#     password = request.form.get('Password')
+#     confirm_password = request.form.get('ConfirmPassword')
+
+#     # Check if passwords match
+#     if password != confirm_password:
+#         return render_template('signup.html', error="Passwords do not match!")
+
+#     role = 'student'
+    
+#     # Check if the email already exists
+#     existing_email = db_session.query(User).filter_by(email=email).first()
+#     if existing_email:
+#         return render_template('signup.html', error="The Email already exists. Kindly choose another Email.")
+
+#     hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+#     new_user = User(username=name, email=email, role=role, password=hashed_password)
+#     db_session.add(new_user)
+
+#     try:
+#         db_session.commit()
+#         return render_template('signup.html', success="Account created successfully!")
+#     except IntegrityError as e:
+#         db_session.rollback()
+#         return render_template('signup.html', error=f"An error occurred: {e}")
+
+@app.route('/signin/',methods=['GET','POST'])
+
+def signin():
+    if request.method=='POST':
+        name = request.form.get('Username')
+        email = request.form.get('Email')
+        password = request.form.get('Password')
+        confirm_password = request.form.get('ConfirmPassword')
+
+    # Check if passwords match
+        if password != confirm_password:
+            return render_template('signup.html', error="Passwords do not match!")
+
+        role = 'student'
+    
+    # Check if the email already exists
+        existing_email = db_session.query(User).filter_by(email=email).first()
+        if existing_email:
+            return render_template('signup.html', error="The Email already exists. Kindly choose another Email.")
+
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_user = User(username=name, email=email, role=role, password=hashed_password)
+        db_session.add(new_user)
+
+        try:
+            db_session.commit()
+            return render_template('signup.html', success="Account created successfully!")
+        except IntegrityError as e:
+            db_session.rollback()
+            return render_template('signup.html', error=f"An error occurred: {e}")
+
     return render_template('signup.html')
 
-@app.post('/signin')
-def user_signin():
-    name = request.form.get('Username')
-    email = request.form.get('Email')
-    role = 'student'
-    password = request.form.get('Password')
 
-    # new_admin = User(username='Admin', email='admin@codify.com', role='admin', password=generate_password_hash('pass123'))
-    # db_session.add(new_admin)
-    # db_session.commit()
-    
-
-    existing_email = db_session.query(User).filter_by(email=email).first()
-    if existing_email:
-        return render_template('signup.html', error="The Email already exists. Kindly choose another Email.")
-
-    hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-    new_user = User(username=name, email=email, role=role, password=hashed_password)
-    db_session.add(new_user)
-
-    try:
-        db_session.commit()
-        return render_template('signup.html', success="Account created successfully!")
-    except IntegrityError as e:
-        db_session.rollback()
-        return render_template('signup.html', error=f"An error occurred: {e}")
 
 #--------------------------COURSES VIEWS----------------------------------------------->
 
 #students courses dashboard
-@app.route('/courses')
+@app.route('/courses/')
 def courses():
     username = session.get('username')
     courses=db_session.query(Course).all()
@@ -113,7 +141,7 @@ def courses():
     for course in courses:
         course.thumbnail=base64.b64encode(course.course_thumbnail).decode("utf-8")
     return render_template('courses.html',courses=courses,username=username)
-@app.route('/lessons/<int:id>')
+@app.route('/course_lessons/<int:id>')
 def course_lessons(id):
     course = db_session.query(Course).filter_by(id=id).first()
     
@@ -128,8 +156,44 @@ def course_description(id):
     if course:
         course.thumbnail = base64.b64encode(course.course_thumbnail).decode("utf-8")
     return render_template("course_description.html", course=course,username=username)
+@app.route('/enroll/<int:course_id>', methods=['POST', 'GET'])
+def enroll_in_course(course_id):
+    if 'username' not in session or session.get('role') != 'student':
+        flash("Please log in as a student to enroll in courses.", "error")
+        return redirect(url_for('courses'))
 
+    # Get logged-in user
+    username = session.get('username')
+    user = db_session.query(User).filter_by(username=username).first()
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('courses'))
 
+    # Check if the course exists
+    course = db_session.query(Course).filter_by(id=course_id).first()
+    if not course:
+        flash("Course not found.", "error")
+        return redirect(url_for('courses'))
+
+    # Check if user is already enrolled
+    existing_enrollment = db_session.query(Enrollment).filter_by(user_id=user.id, course_id=course.id).first()
+    if existing_enrollment:
+        flash("You are already enrolled in this course.", "info")
+        return redirect(url_for('course_lessons', id=course_id))
+
+    # Create new enrollment
+    new_enrollment = Enrollment(user_id=user.id, course_id=course.id)
+    db_session.add(new_enrollment)
+
+    try:
+        db_session.commit()
+        flash(f"Successfully enrolled in {course.title}!", "success")
+    except Exception as e:
+        db_session.rollback()
+        flash(f"An error occurred while enrolling: {e}", "error")
+
+    # Redirect to the course lessons page
+    return redirect(url_for('course_lessons', id=course_id))
 
 #-------------------------------Admin Views--------------------------------->
 # Admin Dashboard with Access Control
@@ -144,8 +208,8 @@ def show_users():
 
 @app.route('/admin/show-courses/')
 def show_courses():
-    # if 'username' not in session or session.get('role') != 'admin':
-    #     return redirect(url_for('get_login'))
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     courses = db_session.query(Course).all()
     for course in courses:
         course.thumbnail=base64.b64encode(course.course_thumbnail).decode("utf-8")
@@ -153,6 +217,8 @@ def show_courses():
 
 @app.route('/admin/deletecourse/<int:id>',methods=['POST'])
 def deletecourse(id):
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     course=db_session.query(Course).get(id)
     db_session.delete(course)
     db_session.commit()
@@ -250,37 +316,58 @@ def add_course():
   
     return render_template('addcourse.html')
 
+
+UPLOAD_FOLDER = 'static/blogs/thumbnail'  # Ensure this is the correct path
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/admin/addblog/', methods=['GET', 'POST'])
 def addblog():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['Description']
         category = request.form['category']
-        thumbnail = request.files['Thumbnail'].read()  # Read the uploaded file as binary data
-        
-        try:
-            # Create the blog post instance
+
+        if 'Thumbnail' not in request.files:
+            return render_template('addblog.html', error='No file part')
+
+        file = request.files['Thumbnail']
+
+        if file.filename == '':
+            return render_template('addblog.html', error='No selected file')
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(UPLOAD_FOLDER, filename)
+            
+            # Ensure the upload folder exists
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+            file.save(file_path)
+
+            # Save the file path instead of binary data
             blog = Blogpost(
                 title=title,
                 category=category,
                 description=description,
-                thumbnail=thumbnail  # Store the binary image data
+                thumbnail=file_path  # Save the file path
             )
 
-            db_session.add(blog)
-            db_session.commit()
-
-            return render_template('addblog.html', success=f'{title} successfully added to the Blog page')
-
-        except Exception as e:
-            # If an error occurs, print the error and perform a rollback
-            print(f"Error occurred: {e}")
-            db_session.rollback()  # Rollback any changes if there was an error
-
-            return render_template('addblog.html', error='There was an error while uploading the Blog page')
+            try:
+                db_session.add(blog)
+                db_session.commit()
+                return render_template('addblog.html', success=f'{title} successfully added to the Blog page')
+            except Exception as e:
+                print(f"Error occurred: {e}")
+                db_session.rollback()
+                return render_template('addblog.html', error='There was an error while uploading the Blog page')
 
     return render_template('addblog.html')
-@app.route('/admin') 
+
+
+@app.route('/admin/') 
 def admin_dashboard():
     # Check if the user is logged in and is an admin
     # if 'username' not in session or session.get('role') != 'admin':
@@ -314,5 +401,5 @@ def logout():
     return redirect(url_for('index_page'))
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  
     app.run(debug=True)
