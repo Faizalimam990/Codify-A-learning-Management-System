@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError,PendingRollbackError
 import base64
 import json
 import datetime
+import matplotlib.pyplot as plt
 import os
 from werkzeug.utils import secure_filename
 app = Flask(__name__)
@@ -143,7 +144,10 @@ def courses():
     return render_template('courses.html',courses=courses,username=username)
 @app.route('/course_lessons/<int:id>')
 def course_lessons(id):
+    username = session.get('username')
+
     course = db_session.query(Course).filter_by(id=id).first()
+    
     
     if not course:
         return "Course not found", 404
@@ -158,6 +162,7 @@ def course_description(id):
     return render_template("course_description.html", course=course,username=username)
 @app.route('/enroll/<int:course_id>', methods=['POST', 'GET'])
 def enroll_in_course(course_id):
+    username = session.get('username')
     if 'username' not in session or session.get('role') != 'student':
         flash("Please log in as a student to enroll in courses.", "error")
         return redirect(url_for('courses'))
@@ -187,7 +192,8 @@ def enroll_in_course(course_id):
 
     try:
         db_session.commit()
-        flash(f"Successfully enrolled in {course.title}!", "success")
+        return render_template("course_lesson.html",success=f"You have Successfully Enrolled in {course.title}")
+        
     except Exception as e:
         db_session.rollback()
         flash(f"An error occurred while enrolling: {e}", "error")
@@ -197,19 +203,56 @@ def enroll_in_course(course_id):
 
 #-------------------------------Admin Views--------------------------------->
 # Admin Dashboard with Access Control
+from io import BytesIO
+from sqlalchemy.orm import joinedload
 @app.route('/admin/show-users/')
 def show_users():
-    # if 'username' not in session or session.get('role') != 'admin':
-    #     return redirect(url_for('get_login'))
-    users = db_session.query(User).all()
-    
-    return render_template('showusers.html')
+    try:
+        # Query the users and their enrollments
+        users = db_session.query(User).all()
+        
+        # Determine how many users are enrolled vs. not enrolled
+        enrolled_count = sum(1 for user in users if len(user.enrollments) > 0)
+        not_enrolled_count = len(users) - enrolled_count
+
+        # Data for pie chart (Enrolled vs Not Enrolled)
+        labels = ['Enrolled', 'Not Enrolled']
+        sizes = [enrolled_count, not_enrolled_count]
+        colors = ['#5e0dd9', '#ff5733']  # Purple for enrolled, Red for not enrolled
+
+        # Log the data for debugging
+        print(f"Enrolled Count: {enrolled_count}")
+        print(f"Not Enrolled Count: {not_enrolled_count}")
+
+        # Initialize Matplotlib
+        import matplotlib
+        matplotlib.use('Agg')  # Non-GUI backend for servers
+        import matplotlib.pyplot as plt
+
+        # Create a pie chart for enrollment status
+        plt.figure(figsize=(8, 8))
+        plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140, wedgeprops={'edgecolor': 'black'})
+        plt.title('Enrollment Status')
+
+        # Save the pie chart as Base64 for rendering
+        img = BytesIO()
+        plt.savefig(img, format='png')
+        img.seek(0)
+        plot_url = base64.b64encode(img.getvalue()).decode()
+        plt.close()
+
+        # Render the template with the users data and the plot
+        return render_template('showusers.html', users=users, plot_url=plot_url)
+
+    except Exception as e:
+        print(f"Error generating plot: {e}")
+        return "Error generating plot", 500
 
 
 @app.route('/admin/show-courses/')
 def show_courses():
-    if 'username' not in session or session.get('role') != 'admin':
-        return redirect(url_for('get_login'))
+    # if 'username' not in session or session.get('role') != 'admin':
+    #     return redirect(url_for('get_login'))
     courses = db_session.query(Course).all()
     for course in courses:
         course.thumbnail=base64.b64encode(course.course_thumbnail).decode("utf-8")
@@ -365,22 +408,68 @@ def addblog():
                 return render_template('addblog.html', error='There was an error while uploading the Blog page')
 
     return render_template('addblog.html')
-
-
-@app.route('/admin/') 
+@app.route('/admin/')
 def admin_dashboard():
     # Check if the user is logged in and is an admin
+    # Uncomment and adjust the below lines if needed to enforce authentication
     # if 'username' not in session or session.get('role') != 'admin':
     #     return redirect(url_for('get_login'))
 
-    users = db_session.query(User).all()
-    courses = db_session.query(Course).all()
-    students=db_session.query(User).filter_by(role='student').count()
-    user_count=students
-    courses_count=len(courses)
-    print(courses_count)
+    try:
+        # Query the total number of users, courses, and students
+        users = db_session.query(User).all()
+        courses = db_session.query(Course).all()
+        students = db_session.query(User).filter_by(role='student').count()
 
-    return render_template('admin.html', users=users, courses=courses,user_count=user_count,courses_count=courses_count)
+        user_count = students
+        courses_count = len(courses)
+
+        # Query the users and their enrollments
+        users = db_session.query(User).all()
+        
+        # Determine how many users are enrolled vs. not enrolled
+        enrolled_count = sum(1 for user in users if len(user.enrollments) > 0)
+        not_enrolled_count = len(users) - enrolled_count
+
+        # Data for pie chart (Enrolled vs Not Enrolled)
+        labels = ['Enrolled', 'Not Enrolled']
+        sizes = [enrolled_count, not_enrolled_count]
+        colors = ['#5e0dd9', '#ff5733']  # Purple for enrolled, Red for not enrolled
+
+        # Log the data for debugging
+        print(f"Enrolled Count: {enrolled_count}")
+        print(f"Not Enrolled Count: {not_enrolled_count}")
+
+        # Initialize Matplotlib
+        import matplotlib
+        matplotlib.use('Agg')  # Non-GUI backend for servers
+        import matplotlib.pyplot as plt
+
+        # Create a pie chart for enrollment status
+        plt.figure(figsize=(8, 8))
+        plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140, wedgeprops={'edgecolor': 'black'})
+        plt.title('Enrollment Status')
+
+        # Save the pie chart as Base64 for rendering
+        img = BytesIO()
+        plt.savefig(img, format='png')
+        img.seek(0)
+        plot_url = base64.b64encode(img.getvalue()).decode()
+        plt.close()
+
+        # Render the template with the necessary data
+        return render_template(
+            'admin.html',
+            users=users,
+            courses=courses,
+            user_count=user_count,
+            courses_count=courses_count,
+            plot_url=plot_url
+        )
+
+    except Exception as e:
+        print(f"Error generating plot: {e}")
+        return "Error generating plot", 500
 
 #---------------------------------------ADMIN VIEWS END---------------------------> 
 

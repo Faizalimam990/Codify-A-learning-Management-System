@@ -8,141 +8,180 @@
     <script src="https://kit.fontawesome.com/64085cd283.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* General Styling */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #ffffff; /* Updated dark background color */
-            color: #E4E4E4; /* Updated text color */
+            background-color: #f4f4f4;
+            color: #333;
         }
-        .navbar {
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
             background-color: #27293D;
-        }
-        .navbar-brand {
-            color: #E4E4E4 !important;
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-        .nav-link {
-            color: #E4E4E4 !important;
-            margin-right: 20px;
-        }
-        .btn-custom {
-            background-color: #FF9F43;
-            color: #1E1E2D;
-            font-weight: bold;
-            border-radius: 25px;
+            color: #E4E4E4;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+            z-index: 1000;
         }
 
-        /* Cards with Glass Effect */
-        .glass {
-            background: rgb(49, 141, 234);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .sidebar .brand {
+            padding: 20px;
+            font-size: 1.5rem;
             text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            color: #E4E4E4; /* Updated text color for cards */
+            font-weight: bold;
+            background-color: #1F1E2C;
         }
-        .glass:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+
+        .sidebar .nav-link {
+            padding: 15px;
+            display: block;
+            color: #E4E4E4;
+            text-decoration: none;
+            font-size: 1rem;
         }
-        .glass i {
-            font-size: 3rem;
-            color: #eef6ff; /* Highlight color for icons */
-            margin-bottom: 15px;
+
+        .sidebar .nav-link:hover {
+            background-color: #444;
+            color: #fff;
         }
-        .glass h4 {
+
+        .sidebar .logout-btn {
+            background-color: #FF9F43;
+            border: none;
+            color: #1E1E2D;
+            width: 90%;
+            margin: 20px auto;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Sidebar Toggler */
+        .sidebar-toggler {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #27293D;
+            border: none;
+            color: #E4E4E4;
             font-size: 1.5rem;
-            margin-bottom: 0;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1100;
         }
-        .glass p {
-            font-size: 2rem;
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card i {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .card h4 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 1.5rem;
             font-weight: bold;
         }
 
-        /* Row Styling */
-        .analytics-card {
-            margin-top: 30px;
-        }
-        hr {
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar-toggler {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="#">CODIFY ADMIN</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <span><i class="fas fa-bars" style="color: white;"></i></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Show Users</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/add-course">Add Course</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/show-courses/">Show All Courses</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Show Analytics</a></li>
-            </ul>
-            <a href="/logout" class="btn btn-custom ml-3">Logout</a>
-        </div>
-    </nav>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="brand">CODIFY ADMIN</div>
+        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="#">Show Users</a>
+        <a class="nav-link" href="/admin/add-course">Add Course</a>
+        <a class="nav-link" href="/admin/show-courses/">Show All Courses</a>
+        <a class="nav-link" href="#">Show Analytics</a>
+        <button class="logout-btn">Logout</button>
+    </div>
 
-    <hr>
+    <!-- Sidebar Toggler -->
+    <button class="sidebar-toggler" id="sidebarToggler"><i class="fas fa-bars"></i></button>
 
-    <!-- Dashboard Analytics -->
-    <div class="container-fluid">
-        <div class="row text-center">
-            <!-- Total Students -->
-            <div class="col-md-4 analytics-card">
-                <div class="glass">
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2 class="mb-4">Dashboard Analytics</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
                     <i class="fas fa-users"></i>
                     <h4>Total Students</h4>
                     <p>{{ user_count }}</p>
                 </div>
             </div>
-            <!-- Total Courses -->
-            <div class="col-md-4 analytics-card">
-                <div class="glass">
+            <div class="col-md-4 mb-4">
+                <div class="card">
                     <i class="fas fa-book"></i>
                     <h4>Total Courses</h4>
                     <p>{{ courses_count }}</p>
                 </div>
             </div>
-            <!-- Analytics -->
-            <div class="col-md-4 analytics-card">
-                <div class="glass">
+            <div class="col-md-4 mb-4">
+                <div class="card">
                     <i class="fas fa-chart-line"></i>
                     <h4>Analytics</h4>
                     <p>{{ analytics }}</p>
                 </div>
             </div>
         </div>
-
-        <!-- Row 2 -->
-        <div class="row text-center">
-            <!-- Total Teachers -->
-            <div class="col-md-4 analytics-card">
-                <div class="glass">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
                     <i class="fas fa-user-tie"></i>
                     <h4>Total Teachers</h4>
                     <p>{{ teacher_count }}</p>
                 </div>
             </div>
-            <!-- Enrolled Students -->
-            <div class="col-md-4 analytics-card">
-                <div class="glass">
+            <div class="col-md-4 mb-4">
+                <div class="card">
                     <i class="fas fa-graduation-cap"></i>
                     <h4>Enrolled Students</h4>
                     <p>{{ enrolled_count }}</p>
                 </div>
             </div>
-            <!-- Pending Approvals -->
-            <div class="col-md-4 analytics-card">
-                <div class="glass">
+            <div class="col-md-4 mb-4">
+                <div class="card">
                     <i class="fas fa-clock"></i>
                     <h4>Pending Approvals</h4>
                     <p>{{ pending_approvals }}</p>
@@ -150,9 +189,31 @@
             </div>
         </div>
     </div>
+    <div class="graph-container">
+        <h2>Enrollment Status</h2>
+        <img src="data:image/png;base64,{{ plot_url }}" class="img-fluid">
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+
+<style>
+      .graph-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+</style>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggler = document.getElementById('sidebarToggler');
+
+        sidebarToggler.addEventListener('click', () => {
+            if (sidebar.style.width === '250px') {
+                sidebar.style.width = '0';
+                document.querySelector('.main-content').style.marginLeft = '0';
+            } else {
+                sidebar.style.width = '250px';
+                document.querySelector('.main-content').style.marginLeft = '250px';
+            }
+        });
+    </script>
 </body>
 </html>
