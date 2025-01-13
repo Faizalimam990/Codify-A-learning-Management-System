@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, session,flash
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User, Course,Lesson,Blogpost,Enrollment,UserProgress,Question,Quiz
+from models import User, Course,Lesson,Blogpost,Enrollment,UserProgress,Question,Quiz,UserAnswer
 from database import session as db_session
 from sqlalchemy.exc import IntegrityError,PendingRollbackError
 import base64
@@ -48,6 +48,7 @@ def user_login():
             # Store user information in the session
             session['username'] = user.username
             session['role'] = user.role
+            session['id'] = user.id 
 
             if user.role == 'student':
                 return render_template('index.html', username=user.username)
@@ -128,9 +129,111 @@ def signin():
 
     return render_template('signup.html')
 
+from sqlalchemy import func
 
 
 #--------------------------COURSES VIEWS----------------------------------------------->
+@app.route('/user/quizzes')
+def user_quizzes():
+    session_id = session.get('id')  # Get the current user's ID from the session
+    
+    # Fetch all quizzes
+    quizzes = db_session.query(Quiz).all()
+    quizzes_with_progress = []
+
+    for quiz in quizzes:
+        progress = 0
+        score = 0
+        total_questions = len(quiz.questions)
+        
+        # Get user progress for the current quiz
+        if quiz.user_progress:
+            user_progress = [p for p in quiz.user_progress if p.user_id == session_id]
+            if user_progress:
+                user_progress = user_progress[0]
+                score = user_progress.quiz_score
+                progress = (user_progress.questions_answered / total_questions) * 100
+
+        quizzes_with_progress.append({
+            'id': quiz.id,
+            'title': quiz.title,
+            'score': score,
+            'progress': progress
+        })
+
+    return render_template('user_quizzes.html', quizzes=quizzes_with_progress)
+
+
+# Route to display the quiz and its questions
+@app.route('/submit_quiz/<int:quiz_id>', methods=['GET', 'POST'])
+def submit_quiz(quiz_id):
+    # Fetch the quiz based on the quiz_id
+    quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
+
+    # Handle the case where the quiz is not found
+    if not quiz:
+        return "Quiz not found", 404
+
+    if request.method == 'POST':
+        # Handle form submission logic here (e.g., process answers)
+        # You can access submitted data using request.form
+        answers = {}
+        for question in quiz.questions:
+            question_key = f"question_{question.id}"
+            if question_key in request.form:
+                answers[question.id] = request.form[question_key]
+        # Process answers and redirect or return a response
+        return redirect(url_for('user_quizzes', quiz_id=quiz.id))
+
+    # Render the template and pass the quiz object
+    return render_template('submit_quiz.html', quiz=quiz)
+
+# # Route to handle quiz submission and score calculation
+# @app.route('/submit_quiz/<int:quiz_id>', methods=['POST','GET'])
+# def submit_quiz(quiz_id):
+#     user_id = session.get('id')  # Retrieve user ID from session
+#     if not user_id:
+#         flash("You must be logged in to submit the quiz!", "danger")
+#         return redirect(url_for('get_login'))  # Redirect to login page if not authenticated
+
+#     user_answers = request.form.to_dict()
+#     questions = db_session.query(Question).filter_by(quiz_id=quiz_id).all()
+
+#     correct_answers = 0
+#     for q in questions:
+#         user_answer = user_answers.get(f'question_{q.id}')
+#         if user_answer is not None:
+#             try:
+#                 if int(user_answer) == q.correct_option:
+#                     correct_answers += 1
+#             except ValueError:
+#                 print(f"Invalid answer for question {q.id}: {user_answer}")
+    
+#     total_questions = len(questions)
+#     score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+
+#     # Save the score in the user_progress table
+#     user_progress = db_session.query(UserProgress).filter_by(
+#         user_id=user_id, course_id=quiz_id
+#     ).first()
+
+#     if user_progress:
+#         user_progress.quiz_score = score
+#     else:
+#         user_progress = UserProgress(user_id=user_id, course_id=quiz_id, quiz_score=score)
+#         db_session.add(user_progress)
+
+#     try:
+#         db_session.commit()
+        
+#     except Exception as e:
+#         db_session.rollback()  # Rollback if there is an error during commit
+#         flash(f"An error occurred: {str(e)}", "danger")
+#         return redirect(url_for('user_quizzes'))  # Redirect to quizzes page if error
+
+#     flash("Quiz submitted successfully!", "success")
+#     return render_template('submit_quiz.html') # Redirect to the quizzes page
+
 
 #students courses dashboard
 @app.route('/courses/')
@@ -349,6 +452,7 @@ def show_courses():
     except IntegrityError as e:
         db_session.rollback()  # Rollback the session on integrity error
         return "An error occurred: " + str(e)
+    
 @app.route('/admin/deletecourse/<int:id>',methods=['POST'])
 def deletecourse(id):
     # if 'username' not in session or session.get('role') != 'admin':

@@ -14,6 +14,7 @@ class User(Base):
     password = Column(String(100), nullable=False)
     progress = relationship('UserProgress', back_populates='user', cascade="all, delete-orphan")
     enrollments = relationship('Enrollment', back_populates='user', cascade="all, delete-orphan")
+    answers = relationship('UserAnswer', back_populates='user', cascade="all, delete-orphan")
 
 # Course Model
 class Course(Base):
@@ -57,6 +58,7 @@ class Enrollment(Base):
     course = relationship('Course', back_populates='enrollments')
 
 # Quiz Model
+
 class Quiz(Base):
     __tablename__ = 'quizzes'
     id = Column(Integer, primary_key=True)
@@ -65,8 +67,9 @@ class Quiz(Base):
     course_id = Column(Integer, ForeignKey('courses.id', ondelete='CASCADE'), nullable=False)
     course = relationship('Course', back_populates='quizzes')
     questions = relationship('Question', back_populates='quiz', cascade="all, delete-orphan")
+    user_progress = relationship('UserProgress', back_populates='quiz', cascade="all, delete-orphan")
 
-# Question Model
+
 class Question(Base):
     __tablename__ = 'questions'
     id = Column(Integer, primary_key=True)
@@ -78,6 +81,7 @@ class Question(Base):
     correct_option = Column(Integer, nullable=False)
     quiz_id = Column(Integer, ForeignKey('quizzes.id', ondelete='CASCADE'), nullable=False)
     quiz = relationship('Quiz', back_populates='questions')
+    user_answers = relationship('UserAnswer', back_populates='question', cascade="all, delete-orphan")  # Add this line
 
 # UserProgress Model
 class UserProgress(Base):
@@ -85,8 +89,24 @@ class UserProgress(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     course_id = Column(Integer, ForeignKey('courses.id', ondelete='CASCADE'), nullable=False)
-    lessons_completed = Column(Integer, default=0)  # Count of lessons completed
-    quiz_score = Column(Float, default=0.0)  # Score from quizzes
+    quiz_id = Column(Integer, ForeignKey('quizzes.id', ondelete='CASCADE'), nullable=True)  # Foreign key added
+    lessons_completed = Column(Integer, default=0)
+    quiz_score = Column(Float, default=0.0)
     last_updated = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    questions_answered = Column(Integer)
+
     user = relationship('User', back_populates='progress')
     course = relationship('Course', back_populates='progress')
+    quiz = relationship('Quiz')  # The relationship now works
+
+
+class UserAnswer(Base):
+    __tablename__ = 'user_answers'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    question_id = Column(Integer, ForeignKey('questions.id', ondelete='CASCADE'), nullable=False)
+    selected_option = Column(Integer, nullable=False)
+    is_correct = Column(Integer, default=0)  # 0 for incorrect, 1 for correct
+
+    user = relationship('User', back_populates='answers')
+    question = relationship('Question', back_populates='user_answers')

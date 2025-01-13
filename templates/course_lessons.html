@@ -177,6 +177,10 @@
                         data-lesson-video="{{ lesson.course_link }}">{{ lesson.title }}</a>
                 </div>
                 {% endfor %}
+                {% for quiz in course.quizzes %}
+                <a href="{{ url_for('submit_quiz', quiz_id=quiz.id) }}" class="btn btn-primary mt-3">Go to Quiz for {{ quiz.title }}</a>
+            {% endfor %}
+                
             </div>
 
             <!-- Lesson Content Section -->

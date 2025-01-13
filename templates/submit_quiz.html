@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Quiz</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">{{ quiz.title }}</h1>
+        
+        <form action="{{ url_for('submit_quiz', quiz_id=quiz.id) }}" method="POST">
+            {% for question in quiz.questions %}
+            <div class="form-group">
+                <label>{{ question.question_text }}</label><br>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="1" required>
+                    <label class="form-check-label">{{ question.option_1 }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="2">
+                    <label class="form-check-label">{{ question.option_2 }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="3">
+                    <label class="form-check-label">{{ question.option_3 }}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="4">
+                    <label class="form-check-label">{{ question.option_4 }}</label>
+                </div>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Submit Quiz</button>
+        </form>
+    </div>
+</body>
+</html>

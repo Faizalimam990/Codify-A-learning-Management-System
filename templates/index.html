@@ -533,11 +533,73 @@
 
 </div>
 </div>
+<footer class="text-white" style="background: linear-gradient(135deg, #5e0dd9 40%, #2a0078 100%); padding: 50px 0; position: relative; overflow: hidden;">
+  <!-- Floating Animation -->
+  <div class="floating-animation">
+    <div style="position: absolute; top: -100px; right: -50px; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; animation: float 6s infinite;"></div>
+    <div style="position: absolute; bottom: -120px; left: -60px; width: 250px; height: 250px; background: rgba(255, 255, 255, 0.15); border-radius: 50%; animation: float-reverse 8s infinite;"></div>
+  </div>
 
+  <div class="container text-center text-md-left">
+    <div class="row">
+      <!-- About Section -->
+      <div class="col-md-4">
+        <h4 class="mb-4">About CODIFY</h4>
+        <p>Codify is your ultimate solution for tech geeks, bringing cutting-edge resources, courses, and insights to fuel your passion for technology and coding.</p>
+        <p><strong>"Innovate, Code, Create, Repeat."</strong></p>
+      </div>
+      <!-- Quick Links -->
+      <div class="col-md-4">
+        <h4 class="mb-4">Quick Links</h4>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-white" style="text-decoration: none;">Home</a></li>
+          <li><a href="#" class="text-white" style="text-decoration: none;">About Us</a></li>
+          <li><a href="#" class="text-white" style="text-decoration: none;">Services</a></li>
+          <li><a href="#" class="text-white" style="text-decoration: none;">Contact</a></li>
+          <li><a href="#" class="text-white" style="text-decoration: none;">Courses</a></li>
+        </ul>
+      </div>
+      <!-- Contact Section -->
+      <div class="col-md-4">
+        <h4 class="mb-4">Contact Us</h4>
+        <p><i class="fas fa-phone-alt mr-2"></i> +91 12345 67890</p>
+        <p><i class="fas fa-envelope mr-2"></i> support@codify.com</p>
+        <p><i class="fas fa-map-marker-alt mr-2"></i> Tech Park, Silicon Valley</p>
+      </div>
+    </div>
+  </div>
+  <!-- Footer Bottom -->
+  <div class="text-center mt-4">
+    <p class="mb-0">© 2025 Codify | Crafted with ❤️ for tech enthusiasts</p>
+  </div>
+</footer>
 
-<div class="container-fluid">
-  ll
-</div>
+<!-- Keyframe Animation -->
+<style>
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes float-reverse {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(20px);
+    }
+  }
+
+  footer ul li a:hover {
+    text-decoration: underline;
+    color: #fbb034;
+  }
+</style>
+
 <!-- FontAwesome JS -->
 <script src="https://kit.fontawesome.com/64085cd283.js" crossorigin="anonymous"></script>
 
