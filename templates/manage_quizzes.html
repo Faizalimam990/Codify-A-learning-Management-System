@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Quizzes</title>
+    
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin-left: 250px; /* Account for the sidebar width */
+        }
+
+        /* Sidebar (from previous design) */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #5E0DD9;
+            color: white;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar .brand {
+            padding: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: bold;
+            background-color: #4B0BB5;
+        }
+
+        .sidebar .nav-link {
+            padding: 15px;
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #7649E0;
+            color: #fff;
+        }
+
+        .sidebar .logout-btn {
+            background-color: #FF9F43;
+            border: none;
+            color: #fff;
+            width: 90%;
+            margin: 20px auto;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px;
+        }
+
+        .main-content h1 {
+            font-size: 2.5rem;
+            color: #5E0DD9;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .main-content .create-quiz-btn {
+            display: inline-block;
+            margin-bottom: 30px;
+            background-color: #5E0DD9;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 5px;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .main-content .create-quiz-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content .quiz-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .main-content .quiz-list li {
+            background-color: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-content .quiz-list li h3 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .main-content .quiz-list li a {
+            color: #5E0DD9;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px 15px;
+            border: 2px solid #5E0DD9;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .main-content .quiz-list li a:hover {
+            background-color: #5E0DD9;
+            color: white;
+        }
+        .course-description {
+    font-size: 1rem;
+    color: #5E0DD9;
+    margin-top: 10px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    opacity: 0.9;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">CODIFY ADMIN</div>
+        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="#">Show Users</a>
+        <a class="nav-link" href="/admin/add_course">Add Course</a>
+        <a class="nav-link" href="/admin/show-courses/">Show All Courses</a>
+        <a class="nav-link" href="#">Show Analytics</a>
+        <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Manage Quizzes</h1>
+    
+        <!-- Create Quiz Button -->
+        <a href="{{ url_for('create_quiz') }}" class="create-quiz-btn">
+            <i class="fas fa-plus"></i> Create New Quiz
+        </a>
+    
+        <!-- Quiz List -->
+        <ul class="quiz-list">
+            {% for quiz in quizzes %}
+            <li>
+                <h3>{{ quiz.title }}</h3>
+                <p class="course-description">{{ quiz.course.title }}</p>  <!-- Displaying course description -->
+                <div>
+                    <a href="{{ url_for('manage_questions', quiz_id=quiz.id) }}" class="btn btn-info btn-sm">
+                        Manage Questions
+                    </a>
+        
+                    <!-- Delete Form -->
+                    <form action="{{ url_for('manage_quizzes') }}" method="post" style="display:inline;">
+                        <input type="hidden" name="quiz_id" value="{{ quiz.id }}">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        
+    </div>
+    
+</body>
+</html>

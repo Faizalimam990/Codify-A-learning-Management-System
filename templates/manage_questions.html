@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Questions</title>
+    
+    <!-- Bootstrap CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            margin-left: 250px; /* Sidebar width */
+            color: #333;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #5E0DD9;
+            color: white;
+            z-index: 1000;
+            padding-top: 20px;
+        }
+
+        .sidebar .brand {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 20px;
+            background-color: #4B0BB5;
+        }
+
+        .sidebar .nav-link {
+            padding: 15px;
+            color: white;
+            font-size: 1rem;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #7649E0;
+        }
+
+        .sidebar .logout-btn {
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #FF9F43;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            width: 90%;
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px;
+        }
+
+        .main-content h1 {
+            color: #5E0DD9;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .main-content .add-question-btn {
+            display: inline-block;
+            background-color: #5E0DD9;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 30px;
+            transition: all 0.2s;
+        }
+
+        .main-content .add-question-btn:hover {
+            background-color: #7649E0;
+        }
+
+        .main-content .question-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .main-content .question-list li {
+            background-color: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content .question-list li h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .main-content .question-list li ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .main-content .question-list li ul li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        .main-content .question-list li ul li:nth-child(odd) {
+            background-color: #e9e9e9;
+        }
+
+        .main-content .question-list li p {
+            font-weight: bold;
+            margin-top: 15px;
+            color: #5E0DD9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand">CODIFY ADMIN</div>
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Manage Quizzes</a>
+        <a href="#" class="nav-link">Add Course</a>
+        <a href="#" class="nav-link">Show Courses</a>
+        <a href="#" class="nav-link">Analytics</a>
+        <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Manage Questions for {{ quiz.title }}</h1>
+
+        <!-- Add Question Button -->
+        <a href="{{ url_for('add_question', quiz_id=quiz.id) }}" class="add-question-btn">
+            <i class="fas fa-plus"></i> Add New Question
+        </a>
+
+        <!-- Question List -->
+        <ul class="question-list">
+            {% for question in questions %}
+            <li>
+                <h3>{{ question.question_text }}</h3>
+                <ul>
+                    <li>1. {{ question.option_1 }}</li>
+                    <li>2. {{ question.option_2 }}</li>
+                    <li>3. {{ question.option_3 }}</li>
+                    <li>4. {{ question.option_4 }}</li>
+                </ul>
+                <p>Correct Answer: Option {{ question.correct_option }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

@@ -21,35 +21,7 @@
         }
 
         /* Navbar Styling */
-        .navbar {
-            background-color: #1e212d;
-            padding: 15px 20px;
-        }
-
-        .navbar-brand {
-            color: #ff9f43 !important;
-            font-weight: bold;
-            font-size: 1.6rem;
-        }
-
-        .nav-link {
-            color: #e4e4e4 !important;
-            font-size: 1.1rem;
-            margin-right: 15px;
-        }
-
-        .nav-link:hover {
-            color: #ff9f43 !important;
-            text-decoration: underline;
-        }
-
-        .btn-custom {
-            background-color: #ff9f43;
-            color: #1e212d;
-            font-weight: bold;
-            border-radius: 30px;
-        }
-
+       
         /* Page Header */
         .header {
             text-align: center;
@@ -156,33 +128,92 @@
                 font-size: 0.9rem;
             }
         }
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #5E0DD9;
+            color: #E4E4E4;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar .brand {
+            padding: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: bold;
+            background-color: #4B0BB5;
+        }
+
+        .sidebar .nav-link {
+            padding: 15px;
+            display: block;
+            color: #E4E4E4;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #7649E0;
+            color: #fff;
+        }
+
+
+        .sidebar .logout-btn {
+            background-color: #FF9F43;
+            border: none;
+            color: #1E1E2D;
+            width: 90%;
+            margin: 20px auto;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Sidebar Toggler */
+        .sidebar-toggler {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #27293D;
+            border: none;
+            color: #E4E4E4;
+            font-size: 1.5rem;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1100;
+        }
+
     </style>
 </head>
 <body>
     
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="#">CODIFY ADMIN</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <span><i class="fas fa-bars" style="color: white;"></i></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Show Users</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/add-course">Add Course</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/show-courses/">Show All Courses</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Show Analytics</a></li>
-            </ul>
-            <a href="/logout" class="btn btn-custom ml-3">Logout</a>
-        </div>
-    </nav>
+    <div class="sidebar" id="sidebar">
+        <div class="brand">CODIFY ADMIN</div>
+        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" href="#">Show Users</a>
+        <a class="nav-link" href="/admin/add_course">Add Course</a>
+        <a class="nav-link" href="/admin/show-courses/">Show All Courses</a>
+        <a class="nav-link" href="#">Show Analytics</a>
+        <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Sidebar Toggler -->
+    <button class="sidebar-toggler" id="sidebarToggler"><i class="fas fa-bars"></i></button>
+
 
     <!-- Main Content -->
     <div class="container">
         <!-- Page Header -->
         <div class="header" id="page-header">Course Management Dashboard</div>
-
+    
         <!-- Course Cards -->
         {% for course in courses %}
         <div class="course-card" id="course-{{ loop.index }}">
@@ -190,7 +221,7 @@
             <p><strong>Course ID:</strong> {{ course.id }}</p>
             <img src="data:image/jpeg;base64,{{ course.thumbnail }}" class="img-fluid" alt="Course Thumbnail">
             <h4>Lessons:</h4>
-
+    
             <ul class="lesson-list list-unstyled">
                 {% for lesson in course.lessons %}
                 <li>
@@ -199,17 +230,27 @@
                 </li>
                 {% endfor %}
             </ul>
-
+    
+            <!-- Quiz Creation Form -->
+            <form action="{{ url_for('create_quiz') }}" method="POST">
+                <div class="form-group">
+                    <label for="title">Quiz Title</label>
+                    <input type="text" id="title" name="title" class="form-control" required>
+                </div>
+                <input type="hidden" name="course_id" value="{{ course.id }}"> <!-- Hidden field for course ID -->
+                <button type="submit" class="btn btn-primary">Create Quiz</button>
+            </form>
+    
             <!-- Delete and Update Course Forms -->
             <form action="{{ url_for('deletecourse', id=course.id) }}" method="POST">
                 <button type="submit" class="btn btn-danger">Delete Course</button>
             </form>
             <form action="{{ url_for('update_course', course_id=course.id) }}" method="POST">
-
                 <button type="submit" class="btn btn-custom">Update Course</button>
             </form>
         </div>
         {% endfor %}
+    
     </div>
 
     <!-- GSAP Animation Script -->

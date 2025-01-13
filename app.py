@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, session,flash
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User, Course,Lesson,Blogpost,Enrollment
+from models import User, Course,Lesson,Blogpost,Enrollment,UserProgress,Question,Quiz
 from database import session as db_session
 from sqlalchemy.exc import IntegrityError,PendingRollbackError
 import base64
@@ -201,6 +201,96 @@ def enroll_in_course(course_id):
     # Redirect to the course lessons page
     return redirect(url_for('course_lessons', id=course_id))
 
+@app.route('/admin/quiz/create', methods=['GET', 'POST'])
+def create_quiz():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        course_id = request.form.get('course_id')
+
+        if not course_id:
+            return "Course ID is required", 400
+
+        # Create a new Quiz
+        new_quiz = Quiz(title=title, course_id=int(course_id))
+        db_session.add(new_quiz)
+        db_session.commit()
+        return redirect('/admin/quizzes')
+
+    # Fetch all courses to display in the dropdown
+    courses = db_session.query(Course).all()
+    return render_template('create_quiz.html', courses=courses)
+
+@app.route('/admin/quiz/<int:quiz_id>/add_question', methods=['GET', 'POST'])
+def add_question(quiz_id):
+    quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
+    if not quiz:
+        return "Quiz not found", 404
+
+    if request.method == 'POST':
+        question_text = request.form.get('question_text')
+        option_1 = request.form.get('option_1')
+        option_2 = request.form.get('option_2')
+        option_3 = request.form.get('option_3')
+        option_4 = request.form.get('option_4')
+        correct_option = request.form.get('correct_option')
+
+        if not all([question_text, option_1, option_2, option_3, option_4, correct_option]):
+            flash("All fields are required!", "danger")
+            return redirect(url_for('add_question', quiz_id=quiz_id))
+
+        new_question = Question(
+            question_text=question_text,
+            option_1=option_1,
+            option_2=option_2,
+            option_3=option_3,
+            option_4=option_4,
+            correct_option=int(correct_option),
+            quiz_id=quiz_id
+        )
+        db_session.add(new_question)
+        db_session.commit()
+
+        flash("Question added successfully!", "success")
+        return redirect(url_for('manage_questions', quiz_id=quiz_id))
+
+    return render_template('add_questions.html', quiz=quiz)
+@app.route('/admin/quizzes', methods=['GET', 'POST'])
+def manage_quizzes():
+    if request.method == 'POST':
+        # Handle quiz deletion
+        quiz_id = request.form.get('quiz_id')
+        quiz = db_session.query(Quiz).get(quiz_id)
+        if quiz:
+            db_session.delete(quiz)
+            db_session.commit()
+            flash('Quiz deleted successfully!', 'success')
+        else:
+            flash('Quiz not found!', 'danger')
+        return redirect(url_for('manage_quizzes'))
+
+    quizzes = db_session.query(Quiz).all()
+    return render_template('manage_quizzes.html', quizzes=quizzes)
+@app.route('/admin/quiz/<int:quiz_id>/questions', methods=['GET'])
+def manage_questions(quiz_id):
+    quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
+    if not quiz:
+        return "Quiz not found", 404
+
+    questions = db_session.query(Question).filter_by(quiz_id=quiz_id).all()
+    return render_template('manage_questions.html', quiz=quiz, questions=questions)
+
+@app.route('/progress', methods=['GET'])
+def user_progress():
+    username = session.get('username')
+    user = db_session.query(User).filter_by(username=username).first()
+
+    if not user:
+        return redirect(url_for('login'))
+
+    progress = db_session.query(UserProgress).filter_by(user_id=user.id).all()
+    return render_template('progress.html', progress=progress)
+
+
 #-------------------------------Admin Views--------------------------------->
 # Admin Dashboard with Access Control
 from io import BytesIO
@@ -251,17 +341,18 @@ def show_users():
 
 @app.route('/admin/show-courses/')
 def show_courses():
-    # if 'username' not in session or session.get('role') != 'admin':
-    #     return redirect(url_for('get_login'))
-    courses = db_session.query(Course).all()
-    for course in courses:
-        course.thumbnail=base64.b64encode(course.course_thumbnail).decode("utf-8")
-    return render_template('showcourses.html',courses=courses)
-
+    try:
+        courses = db_session.query(Course).all()
+        for course in courses:
+            course.thumbnail = base64.b64encode(course.course_thumbnail).decode("utf-8")
+        return render_template('showcourses.html', courses=courses)
+    except IntegrityError as e:
+        db_session.rollback()  # Rollback the session on integrity error
+        return "An error occurred: " + str(e)
 @app.route('/admin/deletecourse/<int:id>',methods=['POST'])
 def deletecourse(id):
-    if 'username' not in session or session.get('role') != 'admin':
-        return redirect(url_for('get_login'))
+    # if 'username' not in session or session.get('role') != 'admin':
+    #     return redirect(url_for('get_login'))
     course=db_session.query(Course).get(id)
     db_session.delete(course)
     db_session.commit()
