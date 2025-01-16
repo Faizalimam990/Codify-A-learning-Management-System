@@ -20,46 +20,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 </head>
 <style>
-    .banner1{
-        background-image: url('/static/images/LMS-BG.png');    
-        background-size: cover;
-        background-repeat: no-repeat;
-    }
-
-    .navbar-brand {
-      font-weight: bold;
-      color: #e9e9e9; /* Matches the logo color */
-    }
-    .navbar-brand span {
-      color: white; /* For the white part of the logo */
-      font-family: "Rubik", sans-serif;
-      font-weight: 400;
-    }
-    .nav-link {
-      color: white !important;
-      font-family: "Rubik", sans-serif;
-      font-size: 18px;
-      line-height: 33px;
-    }
-    .nav-link:hover {
-     border-bottom: 2px solid #fbb034;
-     
-     
-    }
-    .btn-custom {
-      background-color: #fbb034; /* Yellow button color */
-      color: white;
-      border-radius: 25px;
-      font-weight: bold;
-    }
-    .btn-custom:hover {
-      background-color: #ffa500; /* Slightly darker yellow on hover */
-    }
+    
     body{
       overflow-x: hidden;
     }
 .bg1{
-    background-color: #0E3C6E;
+    background-color: #5e0dd9;
 }
 .card {
       border: none;
@@ -135,6 +101,7 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.3s ease;
+    width: 300px;
   }
 
   .testimonial-card:hover {
@@ -157,7 +124,7 @@
   .testimonial-author {
     margin-top: 15px;
     font-weight: bold;
-    color: #007bff;
+    color: #5e0dd9;
   }
 
   /* Owl Carousel custom styling */
@@ -180,46 +147,20 @@
   .owl-carousel .owl-dots .owl-dot.active span {
     background-color: #0056b3;
   }
-
+.btn-prio{
+  background-color: #ffce09;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+}
 
 </style>
 <body>
-    <div class="container-fluid banner1">
-        <nav class="navbar  navbar-expand-lg p-4">
-          <a class="navbar-brand" href="#">
-            CODIFY
-          </a>
-          <button class="navbar-toggler" style="color: white;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            <i class="fa-solid fa-bars" style="color: #ffffff;"></i>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/courses">All Courses</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
-              </li>
-            </ul>
+    
+  {% include 'nav.html' %}
       
-      
-            {% if username %}
-          <p class="btn btn-custom p-3">Welcome, {{ username }}!</p>
-      {% else %}
-          <a href="/login" class="btn btn-custom p-3">Account</a>
-      {% endif %}
-      
-          </div>
-        </nav>
-        </div>
-    <div class="container-fluid bg1">
+            
+    <div class="container-fluid  bg1">
         <div class="row">
             <div class="col-md-6 ">
                 
@@ -229,11 +170,11 @@
             </div>
             <div class="col-md-6 mb-2">
                 
-                <div class="card mx-auto" style="width: 21rem;">
+                <div class="card mx-auto mt-3" style="width: 24rem;">
                     <img class="card-img-top" src="data:image/jpeg;base64,{{ course.thumbnail }}" alt="Card image cap">
                     
                     <form action="{{ url_for('enroll_in_course', course_id=course.id) }}" method="POST">
-                      <button type="submit" class="btn btn-primary">Enroll</button>
+                      <button type="submit" class="btn btn-block btn-prio ">Enroll</button>
                   </form>
 
                     </div>
@@ -247,7 +188,7 @@
                         <h4 class="custom-heading">Course Content</h4>
                         {% for lesson in course.lessons %}
                           <p class="lesson-title"><strong> 
-                            <i class=" fa-solid fa-circle-right" style="color: #1680F2;"></i> {{ lesson.title }}</strong></p>
+                            <i class=" fa-solid fa-circle-right" style="color: #5e0dd9;"></i> {{ lesson.title }}</strong></p>
                           
                         {% endfor %}
                       </div>
@@ -257,19 +198,19 @@
                         <h4 class="custom-heading">The Course Includes</h4>
                         <div class="row text-center">
                             <div class="col-md-3 col-sm-6 col-12 mb-4">
-                                <i class="fa fa-award fa-3x mb-2" style="color: #1680F2;"></i>
+                                <i class="fa fa-award fa-3x mb-2" style="color: #5e0dd9;"></i>
                                 <p class="text mt-1" style="font-family: 'Poppins', sans-serif;">Certificate of completion</p>
                             </div>
                             <div class="col-md-3 col-sm-6 col-12 mb-4">
-                                <i class="fa fa-download fa-3x mb-2" style="color: #1680F2;"></i>
+                                <i class="fa fa-download fa-3x mb-2" style="color: #5e0dd9;"></i>
                                 <p class="text mt-1" style="font-family: 'Poppins', sans-serif;">Downloadable Resources</p>
                             </div>
                             <div class="col-md-3 col-sm-6 col-12 mb-4">
-                                <i class="fa fa-headset fa-3x mb-2" style="color: #1680F2;"></i>
+                                <i class="fa fa-headset fa-3x mb-2" style="color: #5e0dd9;"></i>
                                 <p class="text mt-1" style="font-family: 'Poppins', sans-serif;">Live Doubt Support by Mentors</p>
                             </div>
                             <div class="col-md-3 col-sm-6 col-12 mb-4">
-                                <i class="fa fa-file fa-3x mb-2" style="color: #1680F2;"></i>
+                                <i class="fa fa-file fa-3x mb-2" style="color: #5e0dd9"></i>
                                 <p class="text mt-1" style="font-family: 'Poppins', sans-serif;">Interactive Resume Building</p>
                             </div>
                         </div>
@@ -282,7 +223,7 @@
         </div>
           
         <div class="container-fluid">
-            <h4 class="display-4 mt-2 text-center" style="font-family: 'Poppins',sans-serif; font-weight: 600; color: #1680F2;" >Testimonials</h4>
+            <h4 class="display-4 mt-2 text-center" style="font-family: 'Poppins',sans-serif; font-weight: 600; color: #5e0dd9 ;" >Testimonials</h4>
             <div id="testimonial-carousel" class="owl-carousel owl-theme">
                 <div class="item">
                   <div class="testimonial-card text-center">
@@ -311,6 +252,7 @@
 
         </div>
       
+       {% include 'footer.html' %} 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
         <script>

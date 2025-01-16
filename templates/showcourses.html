@@ -128,87 +128,12 @@
                 font-size: 0.9rem;
             }
         }
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #5E0DD9;
-            color: #E4E4E4;
-            transition: all 0.3s ease;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .sidebar .brand {
-            padding: 20px;
-            font-size: 1.5rem;
-            text-align: center;
-            font-weight: bold;
-            background-color: #4B0BB5;
-        }
-
-        .sidebar .nav-link {
-            padding: 15px;
-            display: block;
-            color: #E4E4E4;
-            text-decoration: none;
-            font-size: 1rem;
-        }
-
-        .sidebar .nav-link:hover {
-            background-color: #7649E0;
-            color: #fff;
-        }
-
-
-        .sidebar .logout-btn {
-            background-color: #FF9F43;
-            border: none;
-            color: #1E1E2D;
-            width: 90%;
-            margin: 20px auto;
-            padding: 10px;
-            display: block;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        /* Sidebar Toggler */
-        .sidebar-toggler {
-            display: none;
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: #27293D;
-            border: none;
-            color: #E4E4E4;
-            font-size: 1.5rem;
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 1100;
-        }
-
+        
     </style>
 </head>
 <body>
     
-    <!-- Navbar -->
-    <div class="sidebar" id="sidebar">
-        <div class="brand">CODIFY ADMIN</div>
-        <a class="nav-link" href="#">Home</a>
-        <a class="nav-link" href="#">Show Users</a>
-        <a class="nav-link" href="/admin/add_course">Add Course</a>
-        <a class="nav-link" href="/admin/show-courses/">Show All Courses</a>
-        <a class="nav-link" href="#">Show Analytics</a>
-        <button class="logout-btn">Logout</button>
-    </div>
-
-    <!-- Sidebar Toggler -->
-    <button class="sidebar-toggler" id="sidebarToggler"><i class="fas fa-bars"></i></button>
-
-
+{% include 'adminsidebar.html' %}
     <!-- Main Content -->
     <div class="container">
         <!-- Page Header -->

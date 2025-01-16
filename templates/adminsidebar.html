@@ -1,0 +1,109 @@
+    <!-- Sidebar -->
+    <script src="https://kit.fontawesome.com/64085cd283.js" crossorigin="anonymous"></script>
+
+    <div class="sidebar" id="sidebar">
+        <div class="brand">CODIFY ADMIN</div>
+        <a class="nav-link" href="/admin/">Home</a>
+        <a class="nav-link" href="/admin/show-users/">Show Users</a>
+        <a class="nav-link" href="/admin/add_course">Add Course</a>
+        <a class="nav-link" href="/admin/show-courses/">Show All Courses</a>
+        <a class="nav-link" href="/admin/addblog/">Add Blogs</a>
+        <a class="nav-link" href="/allblogs/admin">Show all Blogs</a>
+        <a class="nav-link" href="/admin/quizzes">Manage Quizzes</a>
+        <!--  -->
+        
+        <button class="logout-btn">Logout</button>
+    </div>
+
+    <!-- Sidebar Toggler -->
+    <button class="sidebar-toggler" id="sidebarToggler"><i class="fas fa-bars"></i></button>
+<style>
+            .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #5E0DD9;
+            color: #E4E4E4;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar .brand {
+            padding: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: bold;
+            background-color: #4B0BB5;
+        }
+
+        .sidebar .nav-link {
+            padding: 15px;
+            display: block;
+            color: #E4E4E4;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .sidebar .logout-btn {
+            background-color: #FF9F43;
+            border: none;
+            color: #1E1E2D;
+            width: 90%;
+            margin: 20px auto;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        /* Sidebar Toggler */
+        .sidebar-toggler {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #27293D;
+            border: none;
+            color: #E4E4E4;
+            font-size: 1.5rem;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1100;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar-toggler {
+                display: block;
+            }
+        }
+</style>
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggler = document.getElementById('sidebarToggler');
+
+    sidebarToggler.addEventListener('click', () => {
+        if (sidebar.style.width === '250px') {
+            sidebar.style.width = '0';
+            document.querySelector('.main-content').style.marginLeft = '0';
+        } else {
+            sidebar.style.width = '250px';
+            document.querySelector('.main-content').style.marginLeft = '250px';
+        }
+    });
+</script>

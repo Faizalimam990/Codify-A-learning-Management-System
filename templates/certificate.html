@@ -3,140 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate of Completion</title>
-    
-    <!-- Styles -->
+    <title>Professional Certificate</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f3f4f6;
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-        }
-        .certificate-container {
-            text-align: center;
-            background-color: #fff;
-            padding: 50px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
-            width: 100%;
         }
         .certificate {
-            border: 10px solid #1e293b;
+            background: white;
+            width: 900px;
             padding: 50px;
-            border-radius: 8px;
+            border: 10px solid #5e0dd9;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
             position: relative;
         }
-        h1, h2, h3 {
-            margin: 0;
+        .certificate::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 3px dashed #5e0dd9;
+            border-radius: 5px;
         }
-        h1 {
-            font-size: 3rem;
-            color: #1e293b;
-            margin-bottom: 10px;
+        .certificate-header h1 {
+            font-size: 40px;
+            color: #5e0dd9;
         }
-        h3 {
-            margin: 30px 0;
-            font-size: 1.5rem;
-            color: #4b5563;
+        .certificate-body h2 {
+            font-size: 28px;
+            color: #333;
         }
-        .certificate-content {
-            margin: 30px 0;
+        .certificate-body p {
+            font-size: 18px;
+            color: #555;
         }
-        .certificate-content span {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-        .recipient {
-            font-size: 2.5rem;
+        .certificate-body span {
             font-weight: bold;
-            margin: 20px 0;
-            color: #2563eb;
+            color: #5e0dd9;
         }
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 50px;
+        .certificate-footer .signature img,
+        .certificate-footer .seal img {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
         }
-        .footer div {
-            text-align: center;
-        }
-        .signature {
-            margin-top: 40px;
-            width: 200px;
-            border-top: 1px solid #000;
-        }
-        .btn {
-            margin-top: 30px;
-            padding: 15px 30px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            background-color: #2563eb;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #1e40af;
+        .certificate-footer p {
+            font-size: 14px;
+            color: #333;
         }
     </style>
 </head>
 <body>
-
-    <div class="certificate-container">
-        <div class="certificate" id="certificate">
-            <h1>Certificate of Completion</h1>
-            <h3>This Certificate is Proudly Presented to</h3>
-            <div class="recipient">{{ user }}</div>
-            <div class="certificate-content">
-                <span>For successfully completing the</span>
-                <h2>Advanced Web Development Course</h2>
-                <span>on <strong>{{ time }}</strong></span>
+    <div class="certificate container">
+        <div class="certificate-header text-center mb-4">
+            <h1>Certificate of Achievement</h1>
+            <p>This is to certify that</p>
+        </div>
+        <div class="certificate-body text-center my-4">
+            <h2><span>{{ recipient_name }}</span></h2>
+            <p>has successfully completed the</p>
+            <p><span>{{ course_name }}</span></p>
+            <p>with outstanding performance and dedication on</p>
+            <p><span>{{ date }}</span></p>
+        </div>
+        <div class="certificate-footer d-flex justify-content-between mt-5">
+            <div class="signature text-center">
+                <img src="{{ urlfor('static',filename='images/signature.png') }}" alt="Signature" class="img-fluid">
+                <p>Authorized Signature</p>
             </div>
-            <div class="footer">
-                <div>
-                    <div class="signature"></div>
-                    
-                    <span>Course Instructor</span>
-                </div>
-                <div>
-                    <div class="signature"></div>
-                    <span>Head of Department</span>
-                </div>
+            <div class="seal text-center">
+                <img src="{{ urlfor('static',filename='images/Codify-stamp.png') }}" alt="Seal" class="img-fluid">
             </div>
         </div>
-        
-        <!-- Download Button -->
-        <button class="btn" onclick="downloadCertificate()">Download Certificate</button>
     </div>
 
-    <!-- JavaScript to Capture and Download as PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <script>
-        const { jsPDF } = window.jspdf;
-
-        function downloadCertificate() {
-            const element = document.getElementById('certificate');
-
-            html2canvas(element, { scale: 3 }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('l', 'mm', 'a4');
-                
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-                pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
-                pdf.save('certificate.pdf');
-            });
-        }
-    </script>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

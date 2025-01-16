@@ -1,0 +1,80 @@
+
+
+<style>
+     .banner1{
+      background-color: #5e0dd9;
+            padding: 1px 0;
+            color: white;
+            text-align: center;
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      color: #e9e9e9; /* Matches the logo color */
+    }
+    .navbar-brand span {
+      color: white; /* For the white part of the logo */
+      font-family: "Rubik", sans-serif;
+      font-weight: 400;
+    }
+    .nav-link {
+      color: white !important;
+      font-family: "Rubik", sans-serif;
+      font-size: 18px;
+      line-height: 33px;
+    }
+    .nav-link:hover {
+     border-bottom: 2px solid #fbb034;
+     
+     
+    }
+    .btn-custom {
+      background-color: #fbb034 ;  /* Yellow button color */
+      color: white;
+      border-radius: 25px;
+      font-weight: bold;
+    }
+    .btn-custom:hover {
+      background-color: #ffa500; /* Slightly darker yellow on hover */
+    }
+</style>
+
+<div class="container-fluid banner1">
+    <nav class="navbar navbar-expand-lg p-2">
+      <a class="navbar-brand" href="#">
+        CODIFY
+      </a>
+      <button class="navbar-toggler" style="color: white;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        <i class="fa-solid fa-bars" style="color: #ffffff;"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/courses">All Courses</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/blogs">Blogs</a>
+          </li>
+        </ul>
+  
+  
+        {% if username %}
+      <p class="btn btn-custom   mt-3">Hi, {{ username }}!</p>
+      <a href="/logout"><i class="ml-2 fa-3x fa-solid fa-arrow-right-from-bracket" style="color: #f5c814;"></i></a>  
+  {% else %}
+      <a href="/login" class="btn btn-custom p-3">Account</a>
+  {% endif %}
+  
+      </div>
+    </nav>
+  </div>

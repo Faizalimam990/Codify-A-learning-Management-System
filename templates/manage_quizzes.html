@@ -21,51 +21,7 @@
             margin-left: 250px; /* Account for the sidebar width */
         }
 
-        /* Sidebar (from previous design) */
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #5E0DD9;
-            color: white;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .sidebar .brand {
-            padding: 20px;
-            font-size: 1.5rem;
-            text-align: center;
-            font-weight: bold;
-            background-color: #4B0BB5;
-        }
-
-        .sidebar .nav-link {
-            padding: 15px;
-            display: block;
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-        }
-
-        .sidebar .nav-link:hover {
-            background-color: #7649E0;
-            color: #fff;
-        }
-
-        .sidebar .logout-btn {
-            background-color: #FF9F43;
-            border: none;
-            color: #fff;
-            width: 90%;
-            margin: 20px auto;
-            padding: 10px;
-            display: block;
-            border-radius: 5px;
-            text-align: center;
-        }
+        
 
         /* Main Content */
         .main-content {
@@ -147,15 +103,7 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="brand">CODIFY ADMIN</div>
-        <a class="nav-link" href="#">Home</a>
-        <a class="nav-link" href="#">Show Users</a>
-        <a class="nav-link" href="/admin/add_course">Add Course</a>
-        <a class="nav-link" href="/admin/show-courses/">Show All Courses</a>
-        <a class="nav-link" href="#">Show Analytics</a>
-        <button class="logout-btn">Logout</button>
-    </div>
+    {% include 'adminsidebar.html' %}
 
     <!-- Main Content -->
     <div class="main-content">

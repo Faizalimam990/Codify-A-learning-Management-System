@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, session,flash
 from flask_restful import Resource, Api
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User, Course,Lesson,Blogpost,Enrollment,UserProgress,Question,Quiz,UserAnswer
+from models import User, Course,Lesson,Blogpost,Enrollment,UserProgress,Question,Quiz,UserAnswer,Contactus
 from database import session as db_session
 from sqlalchemy.exc import IntegrityError,PendingRollbackError
 import base64
@@ -16,16 +16,59 @@ app.secret_key = 'LMSFYNDCAPSTONE_PROJECT_F4I3AL_!M4M'
 
 # Home Route
 import base64
+
+import base64
+
 @app.route('/')
 def index_page():
     username = session.get('username')
-    blogs=db_session.query(Blogpost).all()
-    course=db_session.query(Course).all()
+    blogs = db_session.query(Blogpost).all()
+    for blog in blogs:
+        # Ensure there is no extra static/ prefix
+        blog.thumbnail = blog.thumbnail.replace('\\', '/')  # Fix backslashes
+        if blog.thumbnail.startswith('static/'):
+            blog.thumbnail = blog.thumbnail[len('static/'):]
+    courses = db_session.query(Course).all()
 
-    return render_template('index.html', username=username,blogs=blogs,course=course)
+    # Convert the course_thumbnail to base64
+    for course in courses:
+        if course.course_thumbnail:
+            # Convert binary data to base64
+            course.course_thumbnail_base64 = base64.b64encode(course.course_thumbnail).decode('utf-8')
+        else:
+            course.course_thumbnail_base64 = None
 
+    return render_template('index.html', username=username, blogs=blogs, courses=courses)
+
+@app.route('/aboutus/')
+def aboutus():
+    username = session.get('username')
+
+    return render_template('aboutus.html',username=username)
+@app.route('/contactus/', methods=['GET', 'POST'])
+def contactus():
+    username = session.get('username')  # Assuming you're using a session-based username
     
+    if request.method == 'POST':
+        # Get form data
+        name = request.form.get('name')
+        email = request.form.get('email')
+        info = request.form.get('info')
 
+        # Basic validation
+        if not name or not email or not info:
+            flash("Please fill in all fields.", "error")
+            return redirect(url_for('contactus'))
+
+        # Save to database
+        new_contact = Contactus(name=name, email=email, info=info)
+        db_session.add(new_contact)
+        db_session.commit()
+
+        flash("Your message has been sent successfully.", "success")
+        return redirect(url_for('contactus'))  # Redirect to the same page or another page
+
+    return render_template('contact.html', username=username)
 
 
 # Login Page
@@ -33,7 +76,17 @@ def index_page():
 def get_login():
     return render_template('login.html')
 
+@app.route('/blogs/')
+def blogs():
+    
+    blogs = db_session.query(Blogpost).all()
+    for blog in blogs:
+        # Ensure there is no extra static/ prefix
+        blog.thumbnail = blog.thumbnail.replace('\\', '/')  # Fix backslashes
+        if blog.thumbnail.startswith('static/'):
+            blog.thumbnail = blog.thumbnail[len('static/'):]
 
+    return render_template ('blogs.html',blogs=blogs)
 @app.post('/login')
 def user_login():
     email = request.form.get('Email')
@@ -60,41 +113,6 @@ def user_login():
             return render_template('login.html', error="Incorrect password. Please try again.")
     else:
         return render_template('login.html', error="We can't find your credentials. Kindly sign up with a new account.")
-# Route to display the signup page
-
-# @app.route('/signup/', methods=['GET'])
-# def signin_page():
-#     return render_template('signup.html')
-
-# # Route to handle the signup form submission
-# @app.route('/signin/', methods=['POST'])
-# def user_signin():
-#     name = request.form.get('Username')
-#     email = request.form.get('Email')
-#     password = request.form.get('Password')
-#     confirm_password = request.form.get('ConfirmPassword')
-
-#     # Check if passwords match
-#     if password != confirm_password:
-#         return render_template('signup.html', error="Passwords do not match!")
-
-#     role = 'student'
-    
-#     # Check if the email already exists
-#     existing_email = db_session.query(User).filter_by(email=email).first()
-#     if existing_email:
-#         return render_template('signup.html', error="The Email already exists. Kindly choose another Email.")
-
-#     hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-#     new_user = User(username=name, email=email, role=role, password=hashed_password)
-#     db_session.add(new_user)
-
-#     try:
-#         db_session.commit()
-#         return render_template('signup.html', success="Account created successfully!")
-#     except IntegrityError as e:
-#         db_session.rollback()
-#         return render_template('signup.html', error=f"An error occurred: {e}")
 
 @app.route('/signin/',methods=['GET','POST'])
 
@@ -118,6 +136,10 @@ def signin():
 
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
         new_user = User(username=name, email=email, role=role, password=hashed_password)
+        # admin_pass="admin@codify123"
+        # admin_hash= generate_password_hash(admin_pass, method='pbkdf2:sha256')
+        # new_admin=User(username='admin',email="admin@codify.com",role='admin',password=admin_hash)
+        # db_session.add(new_admin)
         db_session.add(new_user)
 
         try:
@@ -136,23 +158,23 @@ from sqlalchemy import func
 @app.route('/user/quizzes')
 def user_quizzes():
     session_id = session.get('id')  # Get the current user's ID from the session
-    
-    # Fetch all quizzes
-    quizzes = db_session.query(Quiz).all()
+    username=session.get('username')
+    quizzes = db_session.query(Quiz).all()  # Fetch all quizzes
     quizzes_with_progress = []
 
     for quiz in quizzes:
         progress = 0
         score = 0
         total_questions = len(quiz.questions)
-        
+
         # Get user progress for the current quiz
-        if quiz.user_progress:
-            user_progress = [p for p in quiz.user_progress if p.user_id == session_id]
-            if user_progress:
-                user_progress = user_progress[0]
-                score = user_progress.quiz_score
-                progress = (user_progress.questions_answered / total_questions) * 100
+        user_progress = db_session.query(UserProgress).filter_by(
+            user_id=session_id, quiz_id=quiz.id
+        ).first()
+
+        if user_progress:
+            score = user_progress.quiz_score
+            progress = (user_progress.questions_answered / total_questions) * 100
 
         quizzes_with_progress.append({
             'id': quiz.id,
@@ -161,79 +183,56 @@ def user_quizzes():
             'progress': progress
         })
 
-    return render_template('user_quizzes.html', quizzes=quizzes_with_progress)
+    return render_template('user_quizzes.html', quizzes=quizzes_with_progress,username=username)
 
 
 # Route to display the quiz and its questions
 @app.route('/submit_quiz/<int:quiz_id>', methods=['GET', 'POST'])
 def submit_quiz(quiz_id):
-    # Fetch the quiz based on the quiz_id
+    session_id = session.get('id')  # Get the user's ID from the session
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
 
-    # Handle the case where the quiz is not found
     if not quiz:
         return "Quiz not found", 404
 
     if request.method == 'POST':
-        # Handle form submission logic here (e.g., process answers)
-        # You can access submitted data using request.form
-        answers = {}
+        correct_answers = 0
         for question in quiz.questions:
             question_key = f"question_{question.id}"
             if question_key in request.form:
-                answers[question.id] = request.form[question_key]
-        # Process answers and redirect or return a response
-        return redirect(url_for('user_quizzes', quiz_id=quiz.id))
+                user_answer = int(request.form[question_key])
+                if user_answer == question.correct_option:
+                    correct_answers += 1
 
-    # Render the template and pass the quiz object
+        total_questions = len(quiz.questions)
+        score = (correct_answers / total_questions) * 100  # Percentage score
+
+        # Assuming quiz is associated with a course
+        course_id = quiz.course_id  # Update based on your schema
+
+        # Update or create user progress
+        user_progress = db_session.query(UserProgress).filter_by(
+            user_id=session_id, quiz_id=quiz.id
+        ).first()
+
+        if not user_progress:
+            user_progress = UserProgress(
+                user_id=session_id,
+                quiz_id=quiz.id,
+                course_id=course_id,
+                quiz_score=score,
+                questions_answered=total_questions
+            )
+            db_session.add(user_progress)
+        else:
+            user_progress.quiz_score = score
+            user_progress.questions_answered = total_questions
+
+        db_session.commit()
+
+        return redirect(url_for('user_quizzes'))
+
     return render_template('submit_quiz.html', quiz=quiz)
-
-# # Route to handle quiz submission and score calculation
-# @app.route('/submit_quiz/<int:quiz_id>', methods=['POST','GET'])
-# def submit_quiz(quiz_id):
-#     user_id = session.get('id')  # Retrieve user ID from session
-#     if not user_id:
-#         flash("You must be logged in to submit the quiz!", "danger")
-#         return redirect(url_for('get_login'))  # Redirect to login page if not authenticated
-
-#     user_answers = request.form.to_dict()
-#     questions = db_session.query(Question).filter_by(quiz_id=quiz_id).all()
-
-#     correct_answers = 0
-#     for q in questions:
-#         user_answer = user_answers.get(f'question_{q.id}')
-#         if user_answer is not None:
-#             try:
-#                 if int(user_answer) == q.correct_option:
-#                     correct_answers += 1
-#             except ValueError:
-#                 print(f"Invalid answer for question {q.id}: {user_answer}")
-    
-#     total_questions = len(questions)
-#     score = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
-
-#     # Save the score in the user_progress table
-#     user_progress = db_session.query(UserProgress).filter_by(
-#         user_id=user_id, course_id=quiz_id
-#     ).first()
-
-#     if user_progress:
-#         user_progress.quiz_score = score
-#     else:
-#         user_progress = UserProgress(user_id=user_id, course_id=quiz_id, quiz_score=score)
-#         db_session.add(user_progress)
-
-#     try:
-#         db_session.commit()
-        
-#     except Exception as e:
-#         db_session.rollback()  # Rollback if there is an error during commit
-#         flash(f"An error occurred: {str(e)}", "danger")
-#         return redirect(url_for('user_quizzes'))  # Redirect to quizzes page if error
-
-#     flash("Quiz submitted successfully!", "success")
-#     return render_template('submit_quiz.html') # Redirect to the quizzes page
-
 
 #students courses dashboard
 @app.route('/courses/')
@@ -255,7 +254,62 @@ def course_lessons(id):
     if not course:
         return "Course not found", 404
     
-    return render_template('course_lessons.html', course=course)
+    return render_template('course_lessons.html', course=course,username=username)
+import os
+
+@app.route('/allblogs/admin')
+def showallblogs():
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
+    blogs = db_session.query(Blogpost).all()
+    
+    # Normalize the paths
+    for blog in blogs:
+        # Ensure there is no extra static/ prefix
+        blog.thumbnail = blog.thumbnail.replace('\\', '/')  # Fix backslashes
+        if blog.thumbnail.startswith('static/'):
+            blog.thumbnail = blog.thumbnail[len('static/'):]
+
+    return render_template('showadminblogs.html', blogs=blogs)
+@app.route('/updateblog/<int:id>', methods=['GET', 'POST'])
+def updateblog(id):
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
+
+    blog = db_session.query(Blogpost).filter_by(id=id).first()
+
+    if not blog:
+        flash("Blog not found!", "danger")
+        return redirect(url_for('showallblogs'))
+
+    if request.method == 'POST':
+        blog.title = request.form['title']
+        blog.description = request.form['description']
+        
+        # Handle thumbnail update if a new image is uploaded
+        if 'thumbnail' in request.files:
+            file = request.files['thumbnail']
+            if file.filename:
+                filename = os.path.join('static/blogs/thumbnail', file.filename)
+                file.save(filename)
+                blog.thumbnail = filename  # Update blog thumbnail path
+
+        db_session.commit()
+        flash("Blog updated successfully!", "success")
+        return redirect(url_for('showallblogs'))
+
+    return render_template('updateblog.html', blog=blog)
+
+
+
+@app.route('/deleteblog/<int:id>')
+def deleteblog(id):
+    blog = db_session.query(Blogpost).filter_by(id=id).first()
+    if blog:
+        db_session.delete(blog)
+        db_session.commit()
+        return redirect(url_for('showallblogs'))  # Use the function name 'showallblogs' here
+
 @app.route('/courses/course_description/<int:id>')
 def course_description(id):
     username = session.get('username')
@@ -306,6 +360,8 @@ def enroll_in_course(course_id):
 
 @app.route('/admin/quiz/create', methods=['GET', 'POST'])
 def create_quiz():
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     if request.method == 'POST':
         title = request.form.get('title')
         course_id = request.form.get('course_id')
@@ -325,6 +381,8 @@ def create_quiz():
 
 @app.route('/admin/quiz/<int:quiz_id>/add_question', methods=['GET', 'POST'])
 def add_question(quiz_id):
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
     if not quiz:
         return "Quiz not found", 404
@@ -359,6 +417,8 @@ def add_question(quiz_id):
     return render_template('add_questions.html', quiz=quiz)
 @app.route('/admin/quizzes', methods=['GET', 'POST'])
 def manage_quizzes():
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     if request.method == 'POST':
         # Handle quiz deletion
         quiz_id = request.form.get('quiz_id')
@@ -375,6 +435,8 @@ def manage_quizzes():
     return render_template('manage_quizzes.html', quizzes=quizzes)
 @app.route('/admin/quiz/<int:quiz_id>/questions', methods=['GET'])
 def manage_questions(quiz_id):
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
     if not quiz:
         return "Quiz not found", 404
@@ -398,11 +460,15 @@ def user_progress():
 # Admin Dashboard with Access Control
 from io import BytesIO
 from sqlalchemy.orm import joinedload
+
 @app.route('/admin/show-users/')
 def show_users():
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     try:
         # Query the users and their enrollments
         users = db_session.query(User).all()
+        
         
         # Determine how many users are enrolled vs. not enrolled
         enrolled_count = sum(1 for user in users if len(user.enrollments) > 0)
@@ -444,6 +510,8 @@ def show_users():
 
 @app.route('/admin/show-courses/')
 def show_courses():
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     try:
         courses = db_session.query(Course).all()
         for course in courses:
@@ -455,12 +523,13 @@ def show_courses():
     
 @app.route('/admin/deletecourse/<int:id>',methods=['POST'])
 def deletecourse(id):
-    # if 'username' not in session or session.get('role') != 'admin':
-    #     return redirect(url_for('get_login'))
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     course=db_session.query(Course).get(id)
     db_session.delete(course)
     db_session.commit()
     return redirect(url_for('show_courses',Success="Successfully deleted"))
+
 @app.route('/admin/update_course/<int:course_id>/', methods=['GET', 'POST'])
 def update_course(course_id):
     course = db_session.query(Course).filter_by(id=course_id).first()
@@ -564,9 +633,10 @@ def allowed_file(filename):
 @app.route('/admin/addblog/', methods=['GET', 'POST'])
 def addblog():
     if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['Description']
-        category = request.form['category']
+        title = request.form.get('title')
+        description = request.form.get('Description')
+        category = request.form.get('category')
+        print("Runned 1")
 
         if 'Thumbnail' not in request.files:
             return render_template('addblog.html', error='No file part')
@@ -581,9 +651,11 @@ def addblog():
             file_path = os.path.join(UPLOAD_FOLDER, filename)
             
             # Ensure the upload folder exists
+            print("Runned 1")
             os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
             file.save(file_path)
+            print("Runned 1")
 
             # Save the file path instead of binary data
             blog = Blogpost(
@@ -596,6 +668,7 @@ def addblog():
             try:
                 db_session.add(blog)
                 db_session.commit()
+                print("added")
                 return render_template('addblog.html', success=f'{title} successfully added to the Blog page')
             except Exception as e:
                 print(f"Error occurred: {e}")
@@ -659,7 +732,8 @@ def admin_dashboard():
             courses=courses,
             user_count=user_count,
             courses_count=courses_count,
-            plot_url=plot_url
+            plot_url=plot_url,
+            enrolled_count=enrolled_count
         )
 
     except Exception as e:
@@ -669,14 +743,31 @@ def admin_dashboard():
 #---------------------------------------ADMIN VIEWS END---------------------------> 
 
 
+def total_lessons_in_course(course_id):
+    # Query the database to get the total number of lessons in the course
+    return db_session.query(Lesson).filter_by(course_id=course_id).count()
 
-
-@app.route('/certificate/')
-def certificate():
-    user=session.get('username')
+@app.route('/certificate/<int:quiz_id>')
+def certificate(quiz_id):
+    user = session.get('username')
     time = datetime.datetime.now().strftime('%d-%m-%y')
-    return render_template('certificate.html',user=user,time=time)
 
+    # Fetch the quiz title or course name using the quiz_id
+    quiz = db_session.query(Quiz).filter_by(id=quiz_id).first()
+
+    if not quiz:
+        flash("Invalid quiz for certificate generation.", "danger")
+        return redirect(url_for('user_quizzes'))
+
+    # Check user progress to ensure eligibility
+    user_progress = db_session.query(UserProgress).filter_by(user_id=session.get('id'), quiz_id=quiz_id).first()
+
+    if user_progress and user_progress.quiz_score >= 70:
+        course_name = quiz.title  # Assuming title represents the course name
+        return render_template('certificate.html', user=user, time=time, course_name=course_name)
+    else:
+        flash("You are not eligible for a certificate for this quiz.", "warning")
+        return redirect(url_for('user_quizzes'))
 
 # Logout Route
 @app.route('/logout')

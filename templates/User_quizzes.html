@@ -1,12 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Quizzes</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom right, #a1c4fd, #c2e9fb);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Table Styles */
+        .table {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #4a90e2;
+            color: #fff;
+        }
+
+        .table tbody tr:hover {
+            background: #f1f8ff;
+            transition: background 0.3s ease;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            border: none;
+            color: #fff;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            box-shadow: 0 4px 10px rgba(255, 117, 140, 0.4);
+        }
+
+        /* Flash Messages */
+        .alert {
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px 0;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
 </head>
+
 <body>
+    {% include 'nav.html' %}
     <div class="container">
         <h1 class="my-4">Your Quizzes</h1>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -16,29 +107,49 @@
                 </div>
             {% endif %}
         {% endwith %}
-        <table class="table">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th scope="col">Quiz Title</th>
                     <th scope="col">Score</th>
                     <th scope="col">Action</th>
+                    <th scope="col">Certificate</th>
                 </tr>
             </thead>
             <tbody>
                 {% for quiz in quizzes %}
                 <tr>
-                    <td>{{ quiz.title }}</td>
-                    <td>{{ quiz.score }}%</td>
                     <td>
-                        <a href="{{ url_for('submit_quiz', quiz_id=quiz.id) }}" class="btn btn-primary">Take Quiz</a>
+                        <i class="fas fa-book"></i> {{ quiz.title }}
+                    </td>
+                    <td>
+                        <span class="badge badge-info">{{ quiz.score }}%</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('submit_quiz', quiz_id=quiz.id) }}" class="btn btn-primary">
+                            <i class="fas fa-play"></i> Take Quiz
+                        </a>
+                    </td>
+                    <td>
+                        {% if quiz.score >= 70 %}
+                        <a href="{{ url_for('certificate', quiz_id=quiz.id) }}" class="btn btn-success">
+                            <i class="fas fa-certificate"></i> Generate Certificate
+                        </a>
+                        {% else %}
+                        <span class="text-muted">Not Eligible</span>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         
-            
-        </table>
     </div>
+<div class="mt-5"> 
+
+</div>
+
+    {% include 'footer.html' %}
 </body>
+
 </html>

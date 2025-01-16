@@ -14,89 +14,58 @@
     /* General Styling */
     body {
         font-family: 'Poppins', sans-serif;
-        background-color: #121212; /* Dark background for modern look */
+        background-color: white; /* Dark background for modern look */
         color: #E4E4E4; /* Light text for contrast */
         margin: 0;
         padding: 0;
     }
 
-    .navbar {
-        background-color: #1F1F2E;
-    }
-
-    .navbar-brand {
-        color: #FF9F43 !important;
-        font-weight: bold;
-        font-size: 1.75rem;
-        letter-spacing: 2px;
-    }
-
-    .nav-link {
-        color: #E4E4E4 !important;
-        margin-right: 20px;
-        transition: color 0.3s ease;
-    }
-
-    .nav-link:hover {
-        color: #FF9F43 !important;
-    }
-
-    .btn-custom {
-        background-color: #FF9F43;
-        color: #1E1E2D;
-        font-weight: bold;
-        border-radius: 25px;
-        padding: 10px 25px;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .btn-custom:hover {
-        background-color: #e88e2e;
-        color: #ffffff;
-    }
-
     .container {
         max-width: 900px;
-        margin: 50px auto;
+        margin: 15px auto;
+        background-color: #FFFFFF; /* Main content background color */
+        padding: 10px;
+        border-radius: 15px;
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
     }
 
     /* Card Styling */
     .card {
-        background-color: #2C2F3F;
+        background-color: #FFFFFF; /* Keeping cards white */
         border-radius: 15px;
-        box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
         padding: 30px;
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
-        color: #FF9F43;
+        color: #5E0DD9; /* Theme color */
         font-size: 2rem;
         margin-bottom: 30px;
     }
 
     .form-label {
-        color: #E4E4E4;
+        color: #5E0DD9; /* Theme color */
         font-weight: bold;
     }
 
     .form-control {
-        background-color: #3A3F51;
-        border: 1px solid #444950;
-        color: #E4E4E4;
+        background-color: #f4f6f9; /* Light background for form fields */
+        border: 1px solid #CCCCCC; /* Lighter border for form elements */
+        color: #333; /* Dark text for readability */
         border-radius: 8px;
         font-size: 1rem;
         padding: 12px;
     }
 
     .form-control:focus {
-        border-color: #FF9F43;
-        box-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
+        border-color: #5E0DD9;
+        box-shadow: 0 0 10px rgba(94, 13, 217, 0.5); /* Focus effect matching theme color */
     }
 
     .custom-select {
-        background-color: #3A3F51;
-        border: 1px solid #444950;
-        color: #E4E4E4;
+        background-color: #f4f6f9; /* Same light background for select */
+        border: 1px solid #CCCCCC;
+        color: #333;
         border-radius: 8px;
         font-size: 1rem;
         padding: 12px;
@@ -104,33 +73,27 @@
     }
 
     .custom-select:focus {
-        border-color: #FF9F43;
-        box-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
+        border-color: #5E0DD9;
+        box-shadow: 0 0 10px rgba(94, 13, 217, 0.5);
     }
 
-    .custom-select option {
-        background-color: #1F1F2E;
-        color: #E4E4E4;
-    }
-
-    .btn-primary-custom {
-        background-color: #5cb85c;
-        border-color: #5cb85c;
+    .btn-custom {
+        background-color: #5E0DD9;
         color: white;
+        font-weight: bold;
+        border-radius: 25px;
+        padding: 10px 25px;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .btn-primary-custom:hover {
-        background-color: #4cae4c;
-        border-color: #4cae4c;
-    }
-
-    .text-center {
-        text-align: center;
+    .btn-custom:hover {
+        background-color: #4b08d1; /* Darker shade on hover */
+        color: white;
     }
 
     .btn-warning {
         background-color: #FF9F43;
-        border-color: #FF9F43;
+        border-color: #ffffff;
         color: white;
         border-radius: 25px;
         padding: 12px 40px;
@@ -147,35 +110,19 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="#">CODIFY ADMIN</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-            <span><i class="fas fa-bars" style="color: white;"></i></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Show Users</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/add-course">Add Course</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/show-courses/">Show All Courses</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/addblog/">Add Blogs</a></li>
-            </ul>
-            <a href="/logout" class="btn btn-custom ml-3">Logout</a>
-        </div>
-    </nav>
+    {% include 'adminsidebar.html' %}
 
     <!-- Form -->
-     {% if success %}
-     <div class="container">
-        <h4 class="display-4">{{ success }}</h4>
-
-     </div>
-     {% else %}
-     <div class="container">
-        <h4 class="display-4">{{ error }}</h4>
-
-     </div>
-     {% endif %}
+    {% if success %}
+    <div class="container">
+        <h4 class="display-4 text-success">{{ success }}</h4>
+    </div>
+    {% else %}
+    <div class="container">
+        <h4 class="display-4 text-danger">{{ error }}</h4>
+    </div>
+    {% endif %}
+    
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">

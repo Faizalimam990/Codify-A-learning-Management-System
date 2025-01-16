@@ -27,33 +27,6 @@
             color: #333;
         }
 
-        .banner1 {
-            background: linear-gradient(90deg, #5e0dd9, #b100d4);
-            padding: 10px 0;
-            text-align: center;
-            color: white;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-family: 'Rubik', sans-serif;
-            color: #fff;
-            font-size: 28px;
-        }
-
-        .navbar-brand span {
-            color: #fbb034;
-        }
-
-        .nav-link {
-            font-size: 18px;
-            color: white !important;
-            transition: color 0.3s;
-        }
-
-        .nav-link:hover {
-            color: #fbb034 !important;
-        }
 
         .btn-custom {
             background-color: #fbb034;
@@ -138,32 +111,8 @@
 </head>
 
 <body>
-    <div class="container-fluid banner1">
-        <nav class="navbar navbar-expand-lg">
-            <a class="navbar-brand" href="#">CODIFY <span>Courses</span></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/courses">All Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/contact">Contact</a>
-                    </li>
-                </ul>
-                <a href="/login" class="btn btn-custom">Account</a>
-            </div>
-        </nav>
-    </div>
+    {% include 'nav.html' %}
+    
 
     <div class="container">
         <div class="row">
@@ -172,7 +121,7 @@
                 <h4>Lessons</h4>
                 {% for lesson in course.lessons %}
                 <div class="lesson-item">
-                    <a href="#" class="lesson-link" data-lesson-id="{{ lesson.id }}"
+                    <a href="#" style="color: white;" class="lesson-link" data-lesson-id="{{ lesson.id }}"
                         data-lesson-title="{{ lesson.title }}" data-lesson-content="{{ lesson.content }}"
                         data-lesson-video="{{ lesson.course_link }}">{{ lesson.title }}</a>
                 </div>

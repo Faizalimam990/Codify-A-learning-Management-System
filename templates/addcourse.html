@@ -43,6 +43,9 @@
         h1, h2 {
             color: #343a40;
         }
+        .btn-primary{
+            background-color: #5e0dd9;
+        }
     </style>
     <script>
         let lessons = []; // To store added lessons
@@ -103,12 +106,7 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">LMS Admin Panel</a>
-            <a href="{{ url_for('index_page') }}" class="btn btn-outline-light">Back to Courses</a>
-        </div>
-    </nav>
+    {% include 'adminsidebar.html' %}
 
     <!-- Main Content -->
     <div class="container mt-5">

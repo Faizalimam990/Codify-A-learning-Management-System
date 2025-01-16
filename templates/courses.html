@@ -18,7 +18,7 @@
             overflow-x: hidden;
         }
         .banner1 {
-            background: linear-gradient(135deg, #035fba, #4ca1af);
+            background-color: #5E0DD9;
             padding: 20px 0;
             color: white;
             text-align: center;
@@ -69,6 +69,44 @@
             color: #333;
             text-align: center;
         }
+        .btn {
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #5e0dd9;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn:hover {
+  background-color: #5e0dd9;
+  color: white;
+  transform: translateY(-5px);
+}
+.flash-messages {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    .flash-messages li {
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+    }
+
+    .flash-messages .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .flash-messages .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
     </style>
 </head>
 <body>
@@ -86,16 +124,25 @@
                     <li class="nav-item"><a class="nav-link text-light" href="/contact">Contact</a></li>
                 </ul>
                 {% if username %}
-                    <span class="btn btn-custom">Welcome, {{ username }}!</span>
+                    <span class="btn ">hi, {{ username }}!</span>
                 {% else %}
-                    <a href="/login" class="btn btn-custom">Account</a>
+                    <a href="/login" class="btn ">Account</a>
                 {% endif %}
             </div>
         </nav>
         <h1 class="display-4">Learn & Upskill with Codify</h1>
         <p class="lead">Explore our curated list of popular courses to boost your career.</p>
     </div>
-
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+  <ul class="flash-messages">
+    {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
     <div class="container py-5">
         <h2 class="custom-heading">Popular Courses</h2>
         <div class="row">
@@ -113,6 +160,8 @@
             {% endfor %}
         </div>
     </div>
+
+    {% include 'footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>

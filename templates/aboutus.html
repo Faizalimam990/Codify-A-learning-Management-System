@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+  <!-- Fonts CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/64085cd283.js" crossorigin="anonymous"></script>
+  
+</head>
+<style>
+  body{
+    font-family: 'Poppins',sans-serif;
+  }
+  .bg-default{
+    background-color: #5E0DD9;
+  }
+  .btn-custom2{
+    background-color: #5E0DD9;
+    color: white;
+    border-radius: 15px;
+    padding: 15px;
+}
+.btn-custom2:hover{
+    background-color: #5E0DD9;
+    color: white;
+    border-radius: 15px;
+    padding: 15px;
+    
+}
+a{
+    text-decoration: none;
+    color: white !important;
+}
+.text-default{
+  color: #5E0DD9;
+}
+.profile-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .profile-img {
+            border-radius: 50%;
+            border: 5px solid #5E0DD9;
+            max-width: 100%;
+            height: auto;
+        }
+        .profile-text {
+            color: #0a0a0a;
+        }
+        .profile-heading {
+            font-weight: bold;
+            color: #5E0DD9;
+        }
+        .social-icons {
+            margin-top: 20px;
+        }
+        .social-icons a {
+            margin-right: 15px;
+            font-size: 24px;
+            color: #5E0DD9;
+            text-decoration: none;
+        }
+        .fas {
+          color: #5E0DD9;
+        }
+        .fab{
+          color: #5E0DD9;
+        }
+        .codify-bg-header {
+            background:#5E0DD9;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .about-project-container {
+      padding: 50px 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Heading Style */
+    .about-project-heading {
+      font-size: 2.5rem;
+      text-align: center;
+      font-weight: 500;
+      color: #2b2b2b;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Row Flex */
+    .about-project-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    /* Column Styles */
+    .about-project-text-column {
+      flex: 1;
+      max-width: 48%;
+      transition: transform 0.3s ease;
+    }
+
+    .about-project-text-column:hover {
+      transform: scale(1.05);
+    }
+
+    /* Image Column */
+    .about-project-image-column {
+      flex: 1;
+      max-width: 48%;
+      transition: transform 0.3s ease;
+    }
+
+    .about-project-image-column img {
+      width: 100%;
+      transition: transform 0.3s ease;
+    }
+
+    .about-project-image-column img:hover {
+      transform: scale(1.1);
+    }
+
+    /* Text Styling */
+    .about-project-text {
+      text-align: justify;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    /* Animations */
+    .fade-in-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      animation: fadeInLeft 1s forwards;
+    }
+
+    .fade-in-left.delay-1 {
+      animation-delay: 0.3s;
+    }
+
+    .fade-in-left.delay-2 {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes fadeInLeft {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+</style>
+<body>
+    {% include 'nav.html' %}
+    <header class="codify-bg-header">
+      <h1 class="display-4 fw-bold font-weight-bolder">About Codify</h1>
+  </header>
+  <div class="container mt-5 codify-animated-section">
+      <div class="row align-items-center">
+          <div class="col-md-6">
+              <h2>Who We Are</h2>
+              <p>
+                  <strong style="color: #5E0DD9;">Codify</strong> is a technology leader in modern education solutions, dedicated to providing a seamless and efficient learning experience. Our mission is to transform education through technology and empower students and educators with cutting-edge tools.
+              </p>
+              <a href="#contact" class="btn codify-btn-custom">Get in Touch</a>
+          </div>
+          <div class="col-md-6 text-center">
+              <img src="{{ url_for('static', filename='images/ban-1.5.png') }}" class="img-fluid" alt="Codify Banner">
+          </div>
+      </div>
+  </div> 
+    <h4 class="display-4 text-center font-weight-bolder text-default " >About The Developer</h4>
+    
+    
+    <div class="container mt-5">
+      <div class="row profile-container">
+          <div class="col-md-4 text-center">
+              <img src="{{ url_for('static', filename='images/profile.png') }}" class="profile-img img-fluid" alt="Profile Image">
+          </div>
+          <div class="col-md-8">
+              <h4 class="profile-heading display-5">Hi, I am Faizal Imam</h4>
+              <p class="profile-text text-justify">
+                  This LMS project was developed by Faizal Imam, a full-stack Python developer with expertise in Flask, Django, Python, Docker, Git, and SQL. I created this project as part of my Fynd Academy Capstone Project, where I applied my skills to build a scalable, flexible, and efficient learning management system.
+                  <br><br>
+                  Utilizing Flask, a powerful web framework for Python, I developed a robust platform designed to meet the needs of both educators and students in today’s digital age. This project reflects my commitment to excellence, hard work, and a passion for creating high-quality, user-centric learning tools.
+              </p>
+              <div class="social-icons">
+                  <h5>Connect with me:</h5>
+                  <a href="https://www.linkedin.com/in/faizalimam" class="text-dark" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                  <a href="https://github.com/faizalimam" class="text-dark" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                  <a href="https://www.hackerrank.com/faizalimam" class="text-dark" target="_blank"><i class="fab fa-hackerrank"></i> HackerRank</a>
+                  <a href="https://faizalimam.com" class="text-dark" target="_blank"><i class="fas fa-globe"></i> Portfolio</a>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="about-project-container">
+    <h4 class="about-project-heading fade-in-left delay-1">About The Project</h4>
+    <div class="about-project-row">
+      <div class="about-project-text-column fade-in-left delay-2">
+        <p class="about-project-text">
+          I would like to express our heartfelt gratitude to Fynd Academy for their unwavering support and guidance throughout the development of this LMS as part of our capstone project. Fynd Academy has been an incredible resource for aspiring developers, and we owe much of our learning to their courses, mentorship, and community-driven approach. Their commitment to nurturing talent in the tech industry has had a significant impact on this project and continues to inspire us every day.
+        </p>
+      </div>
+      <div class="about-project-image-column">
+        <img src="https://cdn.prod.website-files.com/670cbf146221ee06c3cdd73c/670cbf146221ee06c3cddee5_Fynd%20Academy%20Logo.svg" class="img-fluid" alt="Fynd Academy Logo">
+      </div>
+    </div>
+  </div>  
+
+  {% include 'footer.html' %}
+</body>
+</html>

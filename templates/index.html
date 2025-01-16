@@ -119,8 +119,8 @@
 
 .btn {
   padding: 10px 20px;
-  background-color: #ffffff;
-  color: #5e0dd9;
+  background-color: #5e0dd9;
+  color: white;
   border: none;
   border-radius: 25px;
   font-size: 1.1rem;
@@ -314,6 +314,70 @@
       margin-left: auto;
     }
     
+    .carousel-container {
+            margin: 50px auto;
+            max-width: 90%;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-title {
+            color: #5e0dd9;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .card-text {
+            color: #555;
+            font-size: 14px;
+        }
+        .btn-primary {
+            color: white;
+            
+            background-color: #4b0cb2;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #4b0cb2;
+        }
+        .owl-nav button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #5e0dd9;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .owl-nav button.owl-prev {
+            left: -50px;
+        }
+        .owl-nav button.owl-next {
+            right: -50px;
+        }
+        .owl-nav button:hover {
+            background-color: #4b0cb2;
+        }
+        .item{
+          width: 300px;
+        }
   </style>
 </head>
 <body>
@@ -335,8 +399,12 @@
           <a class="nav-link" href="/courses">All Courses</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="/blogs">Blogs</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/about">About</a>
         </li>
+        
         <li class="nav-item">
           <a class="nav-link" href="/contact">Contact</a>
         </li>
@@ -372,6 +440,26 @@
 <div class="container-fluid">
   <h4 class="display-4 text-center p-3" style="font-family: 'Poppins',sans-serif; font-size: 2.1rem; font-weight: 600;">COURSES WE OFFER </h4>
 </div>
+
+<div class="row">
+  {% for course in courses %}
+  <div class="col-md-4">
+      <div class="card">
+          {% if course.course_thumbnail_base64 %}
+              <img src="data:image/jpeg;base64,{{ course.course_thumbnail_base64 }}" class="card-img-top" alt="Course Image">
+          {% else %}
+              <img src="{{ url_for('static', filename='default-thumbnail.jpg') }}" class="card-img-top" alt="Default Course Image">
+          {% endif %}
+          <div class="card-body">
+              <h5 class="card-title">{{ course.title }}</h5>
+              <p class="card-text">{{ course.description.split()[:25] | join(' ') }}{% if course.description.split()|length > 50 %}...{% endif %}</p>
+              <a href="{{ url_for('course_description', id=course.id) }}" class="btn btn-custom w-100">Explore Course</a>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+</div>
+
 <div class="container-fluid">
   <div class="row ">
     <!-- First Column -->
@@ -422,20 +510,26 @@
 <div class="container-fluid">
   <h4 class="display-4 text-center" style="font-family: 'Poppins',sans-serif; font-weight: 600;">Our Latest Blogs</h4>
 </div>
-
 <div class="container-fluid">
-  {% for blog in blogs %}
-    <div class="blog-post">
-        <h2>{{ blog.title }}</h2>
-        {% if blog.thumbnail %}
-            <img src="{{ blog.thumbnail }}" alt="Thumbnail">
-        {% else %}
-            <img src="/static/default_thumbnail.png" alt="Default Thumbnail">
-        {% endif %}
-        <p>{{ blog.description }}</p>
+  <div class="carousel-container">
+    <div class="owl-carousel owl-theme">
+      {% for blog in blogs[:5] %}
+        <div class="item">
+          <div class="card" style="width: 18rem;">
+            
+            <img class="card-img-top img-fluid" src="{{ url_for('static', filename=blog.thumbnail.split('static/', 1)[-1]) }}" alt="Blog image">
+            <div class="card-body">
+              <h5 class="card-title">{{ blog.title }}</h5>
+              <p class="card-text">{{ blog.description[:100] }}</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
     </div>
+  </div>
 </div>
-{% endfor %}
+
 <div class="container mb-5">
   <div class="img-container imm d-flex mx-auto">
     <img src="{{ url_for('static',filename='images/Laptop.jpg') }}" class="img-fluid mb-2" alt="" srcset="">
@@ -504,13 +598,13 @@
 </div>
  
 <div class="container-fluid">
-  <h4 class="display-4 mt-2 text-center" style="font-family: 'Poppins',sans-serif; font-weight: 600; color: #5e0dd9;" >Testimonials</h4>
+  <h4 class="display-4 mt-2 text-center mb-3" style="font-family: 'Poppins',sans-serif; font-weight: 600; color: #5e0dd9;" >Testimonials</h4>
   <div id="testimonial-carousel" class="owl-carousel owl-theme">
       <div class="item">
         <div class="testimonial-card text-center">
-          <img src="{{url_for('static',filename='images/student.webp')}}" alt="John Doe" class=" rounded-circle mb-3">
-          <p class="testimonial-text">"The teachers are very knowledgeable and i love the way they teach and provide Guidence "</p>
-          <p class="testimonial-author">Faizal Imam, Python Developer</p>
+          <img src="{{url_for('static',filename='images/student.webp')}}" alt="John Doe" class=" ml-5 rounded-circle mb-3">
+          <p class="testimonial-text ml-5">"The teachers are very knowledgeable and i love the way they teach and provide Guidence "</p>
+          <p class="testimonial-author ml-5">Faizal Imam, Python Developer</p>
         </div>
       </div>
       <div class="item">
@@ -694,6 +788,19 @@
               }
             });
           });
+        $(document).ready(function () {
+            $(".owl-carousel").owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                navText: ["<", ">"],
+                responsive: {
+                    0: { items: 1 },
+                    600: { items: 2 },
+                    1000: { items: 3 }
+                }
+            });
+        });
   </script>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>

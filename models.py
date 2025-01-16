@@ -87,13 +87,13 @@ class Question(Base):
 class UserProgress(Base):
     __tablename__ = 'user_progress'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
-    course_id = Column(Integer, ForeignKey('courses.id', ondelete='CASCADE'), nullable=False)
-    quiz_id = Column(Integer, ForeignKey('quizzes.id', ondelete='CASCADE'), nullable=True)  # Foreign key added
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    course_id = Column(Integer, ForeignKey('courses.id'), nullable=False, default=1)  # Default course ID
+    quiz_id = Column(Integer, ForeignKey('quizzes.id'), nullable=False)
     lessons_completed = Column(Integer, default=0)
     quiz_score = Column(Float, default=0.0)
-    last_updated = Column(DateTime, server_default=func.now(), onupdate=func.now())
-    questions_answered = Column(Integer)
+    questions_answered = Column(Integer, default=0)
+
 
     user = relationship('User', back_populates='progress')
     course = relationship('Course', back_populates='progress')
@@ -110,3 +110,10 @@ class UserAnswer(Base):
 
     user = relationship('User', back_populates='answers')
     question = relationship('Question', back_populates='user_answers')
+
+class Contactus(Base):
+    __tablename__='Contact_us'
+    id= Column(Integer, primary_key=True)
+    name=Column(String(255),nullable=False)
+    email=Column(String(255),nullable=False)
+    info=Column(String(255),nullable=False)

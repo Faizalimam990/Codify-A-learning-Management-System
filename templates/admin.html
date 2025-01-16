@@ -14,67 +14,7 @@
             color: #333;
         }
 
-        /* Sidebar */
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #27293D;
-            color: #E4E4E4;
-            transition: all 0.3s ease;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .sidebar .brand {
-            padding: 20px;
-            font-size: 1.5rem;
-            text-align: center;
-            font-weight: bold;
-            background-color: #1F1E2C;
-        }
-
-        .sidebar .nav-link {
-            padding: 15px;
-            display: block;
-            color: #E4E4E4;
-            text-decoration: none;
-            font-size: 1rem;
-        }
-
-        .sidebar .nav-link:hover {
-            background-color: #444;
-            color: #fff;
-        }
-
-        .sidebar .logout-btn {
-            background-color: #FF9F43;
-            border: none;
-            color: #1E1E2D;
-            width: 90%;
-            margin: 20px auto;
-            padding: 10px;
-            display: block;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        /* Sidebar Toggler */
-        .sidebar-toggler {
-            display: none;
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: #27293D;
-            border: none;
-            color: #E4E4E4;
-            font-size: 1.5rem;
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 1100;
-        }
+        
 
         /* Main Content */
         .main-content {
@@ -125,22 +65,9 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="brand">CODIFY ADMIN</div>
-        <a class="nav-link" href="#">Home</a>
-        <a class="nav-link" href="#">Show Users</a>
-        <a class="nav-link" href="/admin/add_course">Add Course</a>
-        <a class="nav-link" href="/admin/show-courses/">Show All Courses</a>
-        <a class="nav-link" href="#">Show Analytics</a>
-        <button class="logout-btn">Logout</button>
-    </div>
-
-    <!-- Sidebar Toggler -->
-    <button class="sidebar-toggler" id="sidebarToggler"><i class="fas fa-bars"></i></button>
-
+{% include 'adminsidebar.html' %}
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content ">
         <h2 class="mb-4">Dashboard Analytics</h2>
         <div class="row">
             <div class="col-md-4 mb-4">
@@ -159,46 +86,26 @@
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <i class="fas fa-chart-line"></i>
-                    <h4>Analytics</h4>
-                    <p>{{ analytics }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <i class="fas fa-user-tie"></i>
-                    <h4>Total Teachers</h4>
-                    <p>{{ teacher_count }}</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card">
                     <i class="fas fa-graduation-cap"></i>
                     <h4>Enrolled Students</h4>
                     <p>{{ enrolled_count }}</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <i class="fas fa-clock"></i>
-                    <h4>Pending Approvals</h4>
-                    <p>{{ pending_approvals }}</p>
-                </div>
-            </div>
+        </div>
+        
         </div>
     </div>
-    <div class="graph-container">
-        <h2>Enrollment Status</h2>
-        <img src="data:image/png;base64,{{ plot_url }}" class="img-fluid">
-
+    <div class="container">
+        <div class="graph-container  ">
+            <h2 class="ml-5">Enrollment Status</h2>
+            <img src="data:image/png;base64,{{ plot_url }}" style="width: 400px;" class="img-fluid ml-5 ">
+    
+        </div>
     </div>
 
 <style>
       .graph-container {
             margin-top: 30px;
-            text-align: center;
         }
 </style>
     <script>
