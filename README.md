@@ -22,30 +22,9 @@ This is a full-featured Learning Management System (LMS) built using Flask. It a
 - **Matplotlib**: Data visualization for student analytics
 - **Bootstrap**: Frontend styling
 
+## 🏗️ LMS Architecture Diagram
+![LMS Architecture](https://i.imgur.com/4LZnwUZ.png)
 
-## 📂 Architectural Diagram
-+-------------------+       +----------------------+
-|  User Interface  | <---> | Flask (Backend)      |
-|  (HTML, CSS, JS) |       | (Routes, APIs)       |
-+-------------------+       +----------------------+
-          |                          |
-          v                          v
-+---------------------+      +---------------------+
-|  Flask Templates   | <--> | SQLAlchemy ORM      |
-|  (Jinja2 Rendering)|      | (Database Models)   |
-+---------------------+      +---------------------+
-          |                          |
-          v                          v
-+---------------------+      +---------------------+
-|   Static Files     |      | Database (SQLite)   |
-| (CSS, JS, Images)  |      | (User, Course Data) |
-+---------------------+      +---------------------+
-          |
-          v
-+-----------------------------+
-|  Data Visualization (Matplotlib) |
-|  User Analytics & Insights      |
-+-----------------------------+
 
 
 ## 📂 Project Structure
