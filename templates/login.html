@@ -178,6 +178,10 @@
                 <form method="post">
                     <div class="form-group">
                         <h4>Student Login</h4>
+                        <div style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 10px;">
+                            <strong>Error: </strong>{{ error }}
+                        </div>
+                        {% endif %}
                         <label for="email">Email Address</label>
                         <input type="email" name="Email" class="form-control" placeholder="Johndoe@gmail.com">
                     </div>
