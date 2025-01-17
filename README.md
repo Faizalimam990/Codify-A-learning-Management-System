@@ -1,4 +1,4 @@
-#Codify - A Modern Learning Management System
+## Codify - A Modern Learning Management System
 
 ## 📌 Project Overview.
 Codify is a feature-rich Learning Management System designed to provide an intuitive and engaging platform for both learners and educators. With Codify, users can easily enroll in courses, take quizzes, and earn certificates upon completion. The platform also enables learners to stay up-to-date with the latest trends and insights through blogs and interactive video lectures.
