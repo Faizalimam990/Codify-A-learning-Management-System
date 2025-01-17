@@ -22,6 +22,7 @@ import base64
 @app.route('/')
 def index_page():
     username = session.get('username')
+    role=session.get('role')
     blogs = db_session.query(Blogpost).all()
     for blog in blogs:
         # Ensure there is no extra static/ prefix
@@ -38,7 +39,7 @@ def index_page():
         else:
             course.course_thumbnail_base64 = None
 
-    return render_template('index.html', username=username, blogs=blogs, courses=courses)
+    return render_template('index.html', username=username, blogs=blogs, courses=courses,role=role)
 
 @app.route('/aboutus/')
 def aboutus():
@@ -87,6 +88,16 @@ def blogs():
             blog.thumbnail = blog.thumbnail[len('static/'):]
 
     return render_template ('blogs.html',blogs=blogs)
+@app.route('/blogs/<int:id>')
+def showblogs(id):
+    blog = db_session.query(Blogpost).filter_by(id=id).first()
+    blog.thumbnail = blog.thumbnail.replace('\\', '/')  # Fix backslashes
+    if blog.thumbnail.startswith('static/'):
+         blog.thumbnail = blog.thumbnail[len('static/'):]
+
+    return render_template('showblog.html', blog=blog)
+
+
 @app.post('/login')
 def user_login():
     email = request.form.get('Email')
@@ -304,6 +315,8 @@ def updateblog(id):
 
 @app.route('/deleteblog/<int:id>')
 def deleteblog(id):
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     blog = db_session.query(Blogpost).filter_by(id=id).first()
     if blog:
         db_session.delete(blog)
@@ -592,6 +605,9 @@ def update_course(course_id):
 
 @app.route('/admin/add_course/', methods=['GET', 'POST'])
 def add_course():
+    
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     if request.method == 'POST':
         # Get course data
         title = request.form['title']
@@ -632,6 +648,9 @@ def allowed_file(filename):
 
 @app.route('/admin/addblog/', methods=['GET', 'POST'])
 def addblog():
+    
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
     if request.method == 'POST':
         title = request.form.get('title')
         description = request.form.get('Description')
@@ -650,14 +669,12 @@ def addblog():
             filename = secure_filename(file.filename)
             file_path = os.path.join(UPLOAD_FOLDER, filename)
             
-            # Ensure the upload folder exists
             print("Runned 1")
             os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
             file.save(file_path)
             print("Runned 1")
 
-            # Save the file path instead of binary data
             blog = Blogpost(
                 title=title,
                 category=category,
@@ -678,10 +695,8 @@ def addblog():
     return render_template('addblog.html')
 @app.route('/admin/')
 def admin_dashboard():
-    # Check if the user is logged in and is an admin
-    # Uncomment and adjust the below lines if needed to enforce authentication
-    # if 'username' not in session or session.get('role') != 'admin':
-    #     return redirect(url_for('get_login'))
+    if 'username' not in session or session.get('role') != 'admin':
+        return redirect(url_for('get_login'))
 
     try:
         # Query the total number of users, courses, and students
@@ -776,5 +791,5 @@ def logout():
     return redirect(url_for('index_page'))
 
 
-if __name__ == '__main__':  
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)  # Ensure using 127.0.0.1 instead of 0.0.0.0

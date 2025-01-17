@@ -92,7 +92,8 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ blog.title }}</h5>
                             <p class="card-text">{{ blog.description[:150] }}</p>
-                            <a href="#" class="btn btn-primary">Read More</a>
+                            <a href="{{ url_for('showblogs', id=blog.id) }}" class="btn btn-primary">Read More</a>
+
                         </div>
                     </div>
                 </div>

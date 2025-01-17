@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Codify-one solution for tech geeks</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/log.ico') }}" type="image/x-icon">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -14,376 +15,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/64085cd283.js" crossorigin="anonymous"></script>
-  
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+
   <!-- owl carousal -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
   <style>
-    .banner1{
-      background-color: #5e0dd9;
-            padding: 1px 0;
-            color: white;
-            text-align: center;
-    }
-
-    .navbar-brand {
-      font-weight: bold;
-      color: #e9e9e9; /* Matches the logo color */
-    }
-    .navbar-brand span {
-      color: white; /* For the white part of the logo */
-      font-family: "Rubik", sans-serif;
-      font-weight: 400;
-    }
-    .nav-link {
-      color: white !important;
-      font-family: "Rubik", sans-serif;
-      font-size: 18px;
-      line-height: 33px;
-    }
-    .nav-link:hover {
-     border-bottom: 2px solid #fbb034;
-     
-     
-    }
-    .btn-custom {
-      background-color: #fbb034 ;  /* Yellow button color */
-      color: white;
-      border-radius: 25px;
-      font-weight: bold;
-    }
-    .btn-custom:hover {
-      background-color: #ffa500; /* Slightly darker yellow on hover */
-    }
     body{
-      overflow-x: hidden;
+      font-family: 'Poppins',sans-serif;
     }
-    .imm {
-  position: relative;
-  overflow: hidden;
-  border-radius: 30px;
-  transition: border-radius 1s, background-color 1s;
+    .center-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
-
-.imm:hover {
-  background-color: #5e0dd9;
-  border-radius: 50px;
-  border: 10px solid #5e0dd9;
-}
-
-.img-container {
-  position: relative;
-}
-
-.img-container img {
-  width: 100%;
-  height: auto;
-  transition: transform 1s;
-}
-
-.img-container:hover img {
-  transform: scale(1.1);
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(94, 13, 217, 0.8); /* Same purple as the hover background */
+.btt{
+  background-color: #f5c814;
   color: white;
-  opacity: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 20px;
-  transition: opacity 0.5s ease;
 }
 
-.imm:hover .overlay {
-  opacity: 1;
-}
-
-.overlay h3 {
-  font-size: 2rem;
-  margin-bottom: 15px;
-}
-
-.overlay p {
-  font-size: 1rem;
-  margin-bottom: 20px;
-}
-
-.btn {
-  padding: 10px 20px;
-  background-color: #5e0dd9;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.btn:hover {
-  background-color: #5e0dd9;
-  color: white;
-  transform: translateY(-5px);
-}
-
-.btn:active {
-  transform: translateY(0);
-}
-
-.top-demanded-course {
-    padding: 5rem 2rem;
-    background: linear-gradient(135deg, #ffffff 50%, #f3f3f3 100%);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Text Section */
-  .course-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 0 2rem;
-    animation: fadeIn 2s ease-out;
-  }
-
-  .course-heading {
-    font-size: 1.2rem;
-    color: #5e0dd9;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    opacity: 0;
-    transform: translateY(-20px);
-    animation: fadeInUp 1s forwards;
-  }
-
-  .course-title {
-    font-size: 3rem;
-    font-weight: bold;
-    color: #5e0dd9;
-    margin-bottom: 1rem;
-    line-height: 1.3;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    transform: translateY(-20px);
-    animation: fadeInUp 1.5s 0.2s forwards;
-  }
-
-  .course-description {
-    font-size: 1rem;
-    color: #6c757d;
-    font-weight: 400;
-    max-width: 80%;
-    opacity: 0;
-    transform: translateY(-20px);
-    animation: fadeInUp 2s 0.4s forwards;
-  }
-
-  /* Image Section */
-  .course-image img {
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.5s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    animation: fadeInLeft 1.5s 0.5s forwards;
-  }
-
-  /* Hover effect for the image */
-  .course-image img:hover {
-    transform: scale(1.1);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Animations */
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes fadeInLeft {
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  /* Responsiveness */
-  @media (max-width: 768px) {
-    .course-title {
-      font-size: 2.5rem;
-    }
-
-    .course-description {
-      font-size: 0.9rem;
-      max-width: 90%;
-    }
-
-    .course-heading {
-      font-size: 1rem;
-    }
-
-    .course-image img {
-      max-height: 400px;
-    }
-    
-  }
-
-  @media (max-width: 576px) {
-    .course-text {
-      text-align: center;
-      padding: 2rem 0;
-    }
-
-    .course-title {
-      font-size: 1.8rem;
-    }
-
-    .course-description {
-      font-size: 0.9rem;
-      max-width: 100%;
-    }
-
-    .course-image img {
-      max-height: 300px;
-    }
-    
-  }
-  
-  .btn-custom2 {
-      background-color: #5e0dd9; /* Yellow button color */
-      color: white;
-      border-radius: 25px;
-      font-weight: bold;
-    }
-    .btn-custom:hover {
-      background-color: #ffa500; /* Slightly darker yellow on hover */
-    }
-
-    .stat-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-    .icon-circle {
-      width: 60px;
-      height: 60px;
-      background-color: #5e0dd9;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 20px;
-    }
-    .fais{
-      color: white;
-      
-    }
-    
-    .stat-content h5 {
-      font-size: 1.5rem;
-      font-weight: 500;
-    }
-    .stat-content p {
-      font-size: 0.9rem;
-      color: #6c757d;
-      margin: 0;
-    }
-    .stat-number {
-      font-size: 2.6rem;
-      font-weight: bold;
-      color: #5e0dd9;
-      margin-left: auto;
-    }
-    
-    .carousel-container {
-            margin: 50px auto;
-            max-width: 90%;
-        }
-        .card {
-            border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        .card-img-top {
-            height: 200px;
-            object-fit: cover;
-        }
-        .card-title {
-            color: #5e0dd9;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .card-text {
-            color: #555;
-            font-size: 14px;
-        }
-        .btn-primary {
-            color: white;
-            
-            background-color: #4b0cb2;
-            border: none;
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #4b0cb2;
-        }
-        .owl-nav button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #5e0dd9;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .owl-nav button.owl-prev {
-            left: -50px;
-        }
-        .owl-nav button.owl-next {
-            right: -50px;
-        }
-        .owl-nav button:hover {
-            background-color: #4b0cb2;
-        }
-        .item{
-          width: 300px;
-        }
   </style>
 </head>
 <body>
     <div class="container-fluid banner1">
   <nav class="navbar navbar-expand-lg p-2">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand ml-2" href="#">
       CODIFY
     </a>
     <button class="navbar-toggler" style="color: white;" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -402,22 +58,33 @@
           <a class="nav-link" href="/blogs">Blogs</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/about">About</a>
+          <a class="nav-link" href="/aboutus">About</a>
         </li>
         
         <li class="nav-item">
-          <a class="nav-link" href="/contact">Contact</a>
+          <a class="nav-link" href="/contactus">Contact</a>
         </li>
       </ul>
 
 
       {% if username %}
-    <p class="btn btn-custom   mt-3">Hi, {{ username }}!</p>
-    <a href="/logout"><i class="ml-2 fa-3x fa-solid fa-arrow-right-from-bracket" style="color: #f5c814;"></i></a>  
-{% else %}
-    <a href="/login" class="btn btn-custom p-3">Account</a>
-{% endif %}
-
+      <p class="btn btn-custom mt-3">Hi, {{ username }}!</p>
+  
+      <!-- Check if user is an admin -->
+      {% if role == 'admin' %}
+          <!-- Admin-specific link and menu -->
+          <div class="admin-menu">
+              <a href="/admin/" class="btn btn-primary">Admin Dashboard</a>
+          </div>
+      {% endif %}
+  
+      <!-- Logout button -->
+      <a href="/logout"><i class="ml-2 fa-3x fa-solid fa-arrow-right-from-bracket" style="color: #f5c814;"></i></a>
+  
+  {% else %}
+      <a href="/login" class="btn btn-custom p-3">Account</a>
+  {% endif %}
+  
     </div>
   </nav>
 </div>
@@ -429,7 +96,7 @@
       <p class="course-description">
         Codify is an LMS that provides a wide range of coding courses, covering programming languages, frameworks, and development skills. It offers structured lessons, hands-on exercises, and projects to enhance learning.
       </p>
-      <a href="http://" class="btn btn-custom2">Start Learning <i class="fa-solid fa-arrow-right mt-2"></i></a>
+      <a href="/courses/" class="btn btn-custom2">Start Learning <i class="fa-solid fa-arrow-right mt-2"></i></a>
     </div>
     <div class="col-md-6 course-image">
       <img src="{{url_for('static', filename='images/ban-0.3.png')}}" alt="Coding Journey" class="img-fluid animated-image">
@@ -458,6 +125,24 @@
       </div>
   </div>
   {% endfor %}
+</div>
+<div class="text-center mt-5">
+  <button type="button" class="btn btn-primary">View All Courses</button>
+</div>
+
+
+
+<div class="container mb-5 mt-5">
+  <div class="img-container imm d-flex mx-auto">
+    <img src="{{ url_for('static',filename='images/Laptop.jpg') }}" class="img-fluid mb-2" alt="" srcset="">
+    <div class="overlay">
+      <h3>Learn with Codify</h3>
+      <p><em>"The future belongs to those who code." – Faizal Imam</em></p>
+      <p>Start your coding journey with us! Learn everything from web development to advanced algorithms.</p>
+     
+      <a href="https://example.com" class="btn btn-custom2">Start Learning</a>
+    </div>
+  </div>
 </div>
 
 <div class="container-fluid">
@@ -502,43 +187,6 @@
         <i class="fa-solid fa-chart-simple fa-6x" style="color: #f60b36;"></i>
         <p class="text " style="font-family: 'Poppins',sans-serif;font-weight: 600;">Data Analytics</p>
       </a>
-    </div>
-  </div>
-</div>
-
-
-<div class="container-fluid">
-  <h4 class="display-4 text-center" style="font-family: 'Poppins',sans-serif; font-weight: 600;">Our Latest Blogs</h4>
-</div>
-<div class="container-fluid">
-  <div class="carousel-container">
-    <div class="owl-carousel owl-theme">
-      {% for blog in blogs[:5] %}
-        <div class="item">
-          <div class="card" style="width: 18rem;">
-            
-            <img class="card-img-top img-fluid" src="{{ url_for('static', filename=blog.thumbnail.split('static/', 1)[-1]) }}" alt="Blog image">
-            <div class="card-body">
-              <h5 class="card-title">{{ blog.title }}</h5>
-              <p class="card-text">{{ blog.description[:100] }}</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-</div>
-
-<div class="container mb-5">
-  <div class="img-container imm d-flex mx-auto">
-    <img src="{{ url_for('static',filename='images/Laptop.jpg') }}" class="img-fluid mb-2" alt="" srcset="">
-    <div class="overlay">
-      <h3>Learn with Codify</h3>
-      <p><em>"The future belongs to those who code." – Faizal Imam</em></p>
-      <p>Start your coding journey with us! Learn everything from web development to advanced algorithms.</p>
-     
-      <a href="https://example.com" class="btn btn-custom2">Start Learning</a>
     </div>
   </div>
 </div>
@@ -593,6 +241,30 @@
       </div>
     
 
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <h4 class="display-4 text-center" style="font-family: 'Poppins',sans-serif; font-weight: 600;">Our Latest Blogs</h4>
+</div>
+<div class="container-fluid">
+  <div class="carousel-container">
+    <div class="owl-carousel owl-theme">
+      {% for blog in blogs %}
+        <div class="item">
+          <div class="card" style="width: 18rem;">
+            
+            <img class="card-img-top img-fluid" src="{{ url_for('static', filename=blog.thumbnail.split('static/', 1)[-1]) }}" alt="Blog image">
+            <div class="card-body">
+              <h5 class="card-title">{{ blog.title[:24] }}</h5>
+              <p class="card-text">{{ blog.description[:100] }}</p>
+              
+              <a href="{{ url_for('showblogs', id=blog.id) }}" class="btn btn-primary">Read More</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
     </div>
   </div>
 </div>
@@ -657,14 +329,15 @@
       <div class="col-md-4">
         <h4 class="mb-4">Contact Us</h4>
         <p><i class="fas fa-phone-alt mr-2"></i> +91 12345 67890</p>
-        <p><i class="fas fa-envelope mr-2"></i> support@codify.com</p>
-        <p><i class="fas fa-map-marker-alt mr-2"></i> Tech Park, Silicon Valley</p>
+        <p><i class="fas fa-envelope mr-2"></i> Faizalimam017@gmail.com</p>
+        <p><i class="fas fa-map-marker-alt mr-2"></i> Patel Nagar,Bhopal</p>
       </div>
     </div>
   </div>
   <!-- Footer Bottom -->
   <div class="text-center mt-4">
-    <p class="mb-0">© 2025 Codify | Crafted with ❤️ for tech enthusiasts</p>
+    <p class="mb-0">© 2025 Codify | Crafted with ❤️ by <a style="color: white; font-weight: 700; " href="https://www.linkedin.com/in/faizal-imam-45a561236/">Faizal Imam</a></p>
+
   </div>
 </footer>
 
@@ -797,7 +470,7 @@
                 responsive: {
                     0: { items: 1 },
                     600: { items: 2 },
-                    1000: { items: 3 }
+                    1000: { items: 4 }
                 }
             });
         });
