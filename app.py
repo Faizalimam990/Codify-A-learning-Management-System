@@ -73,7 +73,7 @@ def contactus():
 
 
 # Login Page
-@app.get('/login')
+@app.get('/login/')
 def get_login():
     return render_template('login.html')
 
@@ -98,7 +98,7 @@ def showblogs(id):
     return render_template('showblog.html', blog=blog)
 
 
-@app.post('/login')
+@app.post('/login/')
 def user_login():
     email = request.form.get('Email')
     password = request.form.get('Password')
