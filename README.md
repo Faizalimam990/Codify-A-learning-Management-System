@@ -1,7 +1,7 @@
-# Learning Management System (LMS) - Flask
+#Codify - A Modern Learning Management System
 
-## 📌 Project Overview
-This is a full-featured Learning Management System (LMS) built using Flask. It allows users to sign in, enroll in courses, watch video lessons, take quizzes, and receive certificates upon successful completion. The admin panel provides complete control over quizzes, lessons, courses, and blogs.
+## 📌 Project Overview.
+Codify is a feature-rich Learning Management System designed to provide an intuitive and engaging platform for both learners and educators. With Codify, users can easily enroll in courses, take quizzes, and earn certificates upon completion. The platform also enables learners to stay up-to-date with the latest trends and insights through blogs and interactive video lectures.
 
 ## 🎬 Video Overview
 https://github.com/user-attachments/assets/f7da555a-3e23-4ea1-b889-4eab07091f66
