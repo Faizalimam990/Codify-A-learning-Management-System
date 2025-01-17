@@ -83,8 +83,8 @@ LMS-Flask/
 ## 🏗️ Installation Guide
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/lms-flask.git
-   cd lms-flask
+   git clone https://github.com/Faizalimam990/Codify-A-learning-Management-System
+   cd Codify-A-learning-Management-System
    ```
 2. Create a virtual environment:
    ```sh
