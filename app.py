@@ -194,7 +194,7 @@ def user_quizzes():
             'progress': progress
         })
 
-    return render_template('user_quizzes.html', quizzes=quizzes_with_progress,username=username)
+    return render_template('User_quizzes.html', quizzes=quizzes_with_progress,username=username)
 
 
 # Route to display the quiz and its questions
