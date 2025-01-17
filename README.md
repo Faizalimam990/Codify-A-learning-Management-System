@@ -3,6 +3,9 @@
 ## 📌 Project Overview
 This is a full-featured Learning Management System (LMS) built using Flask. It allows users to sign in, enroll in courses, watch video lessons, take quizzes, and receive certificates upon successful completion. The admin panel provides complete control over quizzes, lessons, courses, and blogs.
 
+## 🎬 Video Overview
+https://github.com/user-attachments/assets/f7da555a-3e23-4ea1-b889-4eab07091f66
+
 ## 🚀 Features
 - **User Authentication**: Sign up, login, and manage user profiles.
 - **Course Enrollment**: Users can browse and enroll in available courses.
