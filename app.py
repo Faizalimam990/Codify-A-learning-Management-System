@@ -24,29 +24,33 @@ import base64
 
 #----------------------ADMIN DEMO CREDENTIALS END -------------------------->
 
-  
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 @app.route('/')
 def index_page():
     username = session.get('username')
-    role=session.get('role')
+    role = session.get('role')
     blogs = db_session.query(Blogpost).all()
-    for blog in blogs:
-        
-        blog.thumbnail = blog.thumbnail.replace('\\', '/')  
-        if blog.thumbnail.startswith('static/'):
-            blog.thumbnail = blog.thumbnail[len('static/'):]
+
+    # Log blogs data
+    print(f"Blogs: {blogs}")
+
     courses = db_session.query(Course).all()
 
-    
+    # Log courses data before passing it to the template
+    print(f"Courses before encoding: {courses}")
+
     for course in courses:
         if course.course_thumbnail:
-            
             course.course_thumbnail_base64 = base64.b64encode(course.course_thumbnail).decode('utf-8')
         else:
             course.course_thumbnail_base64 = None
 
-    return render_template('index.html', username=username, blogs=blogs, courses=courses,role=role)
+    # Confirm data being passed to the template
+    print(f"Courses passed to template: {courses}")
+
+    return render_template('index.html', username=username, blogs=blogs, courses=courses, role=role)
+
 
 @app.route('/aboutus/')
 def aboutus():

@@ -33,7 +33,56 @@
   background-color: #f5c814;
   color: white;
 }
+.course-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            background-color: #ffffff;
+            transition: transform 0.3s ease;
+        }
 
+        .course-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .course-card .card-body {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .course-card .card-body h5 {
+            font-size: 1.5rem;
+            color: #5e0dd9;
+        }
+
+        .course-card .card-body p {
+            color: #555;
+        }
+
+        .course-card .card-body .fa {
+            font-size: 40px;
+            color: #5e0dd9;
+            margin-bottom: 15px;
+        }
+
+        .btn-custom3 {
+            background-color: #5e0dd9;
+            color: white;
+            width: 100%;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .btn-custom3:hover {
+            background-color: #4b00c7;
+            text-decoration: none;
+        }
+        .fa-3x{
+          color:#4b00c7 ;
+        }
   </style>
 </head>
 <body>
@@ -66,7 +115,6 @@
         </li>
       </ul>
 
-
       {% if username %}
       <p class="btn btn-custom mt-3">Hi, {{ username }}!</p>
   
@@ -79,7 +127,9 @@
       {% endif %}
   
       <!-- Logout button -->
-      <a href="/logout"><i class="ml-2 fa-3x fa-solid fa-arrow-right-from-bracket" style="color: #f5c814;"></i></a>
+      <a href="/logout">
+          <i class="ml-2 fa-3x fa-solid fa-arrow-right-from-bracket" style="color: #f5c814;"></i>
+      </a>
   
   {% else %}
       <a href="/login/" class="btn btn-custom p-3">Account</a>
@@ -107,27 +157,79 @@
 <div class="container-fluid">
   <h4 class="display-4 text-center p-3" style="font-family: 'Poppins',sans-serif; font-size: 2.1rem; font-weight: 600;">COURSES WE OFFER </h4>
 </div>
-
 <div class="row">
+  <p>{{ courses | length }} </p>  <!-- Debugging line -->
   {% for course in courses %}
-  <div class="col-md-4">
-      <div class="card">
-          {% if course.course_thumbnail_base64 %}
-              <img src="data:image/jpeg;base64,{{ course.course_thumbnail_base64 }}" class="card-img-top" alt="Course Image">
-          {% else %}
-              <img src="{{ url_for('static', filename='default-thumbnail.jpg') }}" class="card-img-top" alt="Default Course Image">
-          {% endif %}
-          <div class="card-body">
-              <h5 class="card-title">{{ course.title }}</h5>
-              <p class="card-text">{{ course.description.split()[:25] | join(' ') }}{% if course.description.split()|length > 50 %}...{% endif %}</p>
-              <a href="{{ url_for('course_description', id=course.id) }}" class="btn btn-custom w-100">Explore Course</a>
-          </div>
-      </div>
-  </div>
+    <div class="col-md-4">
+        <div class="card">
+            {% if course.course_thumbnail_base64 %}
+                <img src="data:image/jpeg;base64,{{ course.course_thumbnail_base64 }}" class="card-img-top" alt="Course Image">
+            {% else %}
+                <img src="{{ url_for('static', filename='default-thumbnail.jpg') }}" class="card-img-top" alt="Default Course Image">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ course.title }}</h5>
+                <p class="card-text">{{ course.description.split()[:25] | join(' ') }}{% if course.description.split()|length > 50 %}...{% endif %}</p>
+                <a href="{{ url_for('course_description', id=course.id) }}" class="btn btn-custom w-100">Explore Course</a>
+            </div>
+        </div>
+    </div>
+  {% else %}
+  <div class="row">
+    <!-- Ethical Hacking Card -->
+    <div class="col-md-3 mb-4">
+        <div class="card course-card">
+            <div class="card-body">
+                <i class="fas fa-3x fa-user-secret"></i>
+                <h5 class="card-title">Ethical Hacking</h5>
+                <p class="card-text">Learn the techniques to secure networks and systems.</p>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Python Card -->
+    <div class="col-md-3 mb-4">
+        <div class="card course-card">
+            <div class="card-body">
+                <i class="fab fa-3x fa-python"></i>
+                <h5 class="card-title">Python Programming</h5>
+                <p class="card-text">Master Python and its libraries for web and data applications.</p>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Analytics Card -->
+    <div class="col-md-3 mb-4">
+        <div class="card course-card">
+            <div class="card-body">
+                <i class="fas fa-3x fa-chart-line"></i>
+                <h5 class="card-title">Data Analytics</h5>
+                <p class="card-text">Learn to analyze and interpret data to make informed decisions.</p>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Web Development Card -->
+    <div class="col-md-3 mb-4">
+        <div class="card course-card">
+            <div class="card-body">
+                <i class="fas fa-3x fa-code"></i>
+                <h5 class="card-title">Web Development</h5>
+                <p class="card-text">Build modern and responsive websites from scratch.</p>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
   {% endfor %}
 </div>
+
 <div class="text-center mt-5">
-  <button type="button" class="btn btn-primary">View All Courses</button>
+  <button type="button" class="btn btn-primary"> <a href="/courses" style="color: white;">View All Courses </a> </button>
 </div>
 
 
